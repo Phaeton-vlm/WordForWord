@@ -23,9 +23,13 @@ tr {
     font-weight:700;
     border: 1px solid;
 }
-table>tbody>tr>td>input{
-    width:100%;
+
+#Chess tr > td{
+    border: 1px solid;
+}
+table > tbody > tr > td > input {
+    width: 100%;
     height: 100%;
     border-width: 2px;
-    padding:0;
+    padding: 0;
 }

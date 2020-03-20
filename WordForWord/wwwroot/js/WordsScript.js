@@ -106,8 +106,9 @@
         if (InsertData(data)) {
 
             //SetFillword();
-            CreateListWordsForSudoku();
-            CreateListWordsForCrossword();
+            //CreateListWordsForSudoku();
+            //CreateListWordsForCrossword();
+            CreateListWordsForChess();
             //console.log("конец AfterGettingResults")
 
         }
@@ -457,6 +458,8 @@
             if (!res) {
                 WordsForCrossword.splice(i, 1);
                 i--;
+            } else {
+                return true;
             }
         }
 
@@ -576,6 +579,397 @@
     /*CROSSWORD END--------------------------------------------------------------------------------------*/
 
 
+
+    /*CHESS START----------------------------------------------------------------------------------------*/
+
+    let WordsForChess = []
+    let Direction = Object.freeze(['RIGHT', 'LEFT', 'UP', 'DOWN' ])
+
+    let ChessMatrix = [
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],]
+
+
+    function ResetChessMatrix() {
+        for (var i = 0; i < ChessMatrix.length; i++) {
+
+            for (var j = 0; j < ChessMatrix[i].length; j++) {
+                ChessMatrix[i][j] = 0;
+            }
+
+        }
+    }
+
+    //Создание списка допустимых слов для "шахмат"
+    function CreateListWordsForChess() {
+        console.log('CreateListWordsForChess');
+
+        ResetChessMatrix()
+
+        WordsForChess = DisplayWords.filter(function (item) {
+            return item.length >= 5 && item.length <= 8;
+        });
+
+        $('#chess-values').empty();
+        let list = $('#chess-values')
+
+        for (var i = 0; i < WordsForChess.length; i++) {
+            list.append("<li>" + WordsForChess[i] + "</li>")
+        }
+
+        CreateChess(WordsForChess[0]);
+    }
+
+
+    let figureX;
+    let figureY;
+
+    //
+    function CreateChess(word, figure = 'rook') {
+
+        ResetChessMatrix()
+
+        figureX = getRandomInt(8);
+        figureY = getRandomInt(8);
+
+        let lastX = figureX;
+        let lastY = figureY;
+
+        ChessMatrix[figureY][figureX] = -5;
+
+        let letter;
+        let choice = 4;
+         
+        let tempRand = getRandomInt(choice);
+
+        ShiftFigure(tempRand, word[0]);
+
+        if (tempRand == 0 || tempRand == 1) {
+
+            for (var i = 0; i < 8; i++) {
+                if (ChessMatrix[i][lastX] != -5) {
+                    ChessMatrix[i][lastX] = -2;
+                }
+                
+            }
+        }
+
+        if (tempRand == 2 || tempRand == 3) {
+
+            for (var i = 0; i < 8; i++) {
+                if (ChessMatrix[lastY][i] != -5) {
+                    ChessMatrix[lastY][i] = -2;
+                }
+                
+            }
+        }
+
+        for (var i = 1; i < word.length; i++) {
+            letter = word[i];
+
+            if (tempRand == 0 || tempRand == 1) {
+                tempRand = getRandomInt(2) + 2;
+            }
+            else if (tempRand == 2 || tempRand == 3) {
+                tempRand = getRandomInt(2);
+            }
+
+            ShiftFigure(tempRand, letter)
+            
+        }
+
+    }
+
+    //Перемещение фигуры
+    function ShiftFigure(direction, letter) {
+
+        let shift;
+
+        switch (Direction[direction]) {
+            case 'RIGHT': {
+
+                shift = CheckRowOrColumRook('RIGHT')
+
+                if (shift == -1) {
+
+                    shift = CheckRowOrColumRook('LEFT')
+                }
+
+                if (shift == -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+                ChessMatrix[figureY][shift] = -5;
+
+                Rook_FillRowOrColum('X')
+
+                figureX = shift
+
+                break;
+            }
+
+            case 'LEFT': {
+
+                shift = CheckRowOrColumRook('LEFT')
+
+                if (shift == -1) {
+
+                    shift = CheckRowOrColumRook('RIGHT')
+                }
+
+                if (shift == -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+                ChessMatrix[figureY][shift] = -5;
+               
+                Rook_FillRowOrColum('X')
+
+                figureX = shift
+
+                break;
+            }
+
+            case 'UP': {
+
+                shift = CheckRowOrColumRook('UP')
+
+                if (shift == -1) {
+
+                    shift = CheckRowOrColumRook('DOWN')
+                }
+
+                if (shift == -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+                ChessMatrix[shift][figureX] = -5;
+                
+                Rook_FillRowOrColum('Y')
+
+                figureY = shift
+
+                break;
+            }
+
+            case 'DOWN': {
+
+                shift = CheckRowOrColumRook('DOWN')
+
+                if (shift == -1) {
+
+                    shift = CheckRowOrColumRook('UP')
+                }
+
+                if (shift == -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+                ChessMatrix[shift][figureX] = -5;
+
+                Rook_FillRowOrColum('Y')
+
+                figureY = shift
+
+                break;
+            }
+           
+        }
+    }
+
+    //Нахождение клетки для вставки буквы
+    function CheckRowOrColumRook(direction) {
+
+        switch (direction) {
+            case 'RIGHT': {
+
+                if (figureX == 7) {
+                    return -1;
+                }
+                else {            
+                    return FindIndexesForChess('X', figureX, 'RIGHT')
+                }
+
+                break;
+            }
+
+            case 'LEFT': {
+
+                if (figureX == 0) {
+                    return -1;
+                }
+                else {
+                    return FindIndexesForChess('X', figureX, 'LEFT')
+                }
+              
+                break;
+            }
+
+            case 'UP': {
+
+                if (figureY == 0) {
+                    return -1;
+                }
+                else {
+                    return FindIndexesForChess('Y', figureY, 'UP')
+                }
+
+                break;
+            }
+
+            case 'DOWN': {
+
+                if (figureY == 7) {
+                    return -1;
+                }
+                else {
+                    return FindIndexesForChess('Y', figureY, 'DOWN')
+                }
+
+                break;
+            }
+
+        }
+
+        return -1;
+    }
+
+    //Нахождение клеток для вставки букв
+    function FindIndexesForChess(axis, startIndex, direction) {
+
+        let result = [];
+
+        switch (axis) {
+
+            case 'X': {
+
+                switch (direction) {
+
+                    case 'RIGHT': {
+
+                        for (var i = startIndex + 1; i < 8; i++) {
+                            if (ChessMatrix[figureY][i] != -2 && ChessMatrix[figureY][i] != -5) {
+                                result.push(i);
+                            }
+                        }
+
+                        if (result.length == 0) {
+                            return -1;
+                        }
+
+                        return result[getRandomInt(result.length)];
+
+                        break;
+                    } 
+
+                    case 'LEFT': {
+
+                        for (var i = startIndex - 1; i >= 0; i--) {
+                            if (ChessMatrix[figureY][i] != -2 && ChessMatrix[figureY][i] != -5) {
+                                result.push(i);
+                            }
+                        }
+
+                        if (result.length == 0) {
+                            return -1;
+                        }
+
+                        return result[getRandomInt(result.length)];
+
+                        break;
+                    } 
+                }
+
+                break;
+            }
+
+            case 'Y': {
+
+                switch (direction) {
+
+                    case 'UP': {
+
+                        for (var i = startIndex - 1; i >= 0; i--) {
+                            if (ChessMatrix[i][figureX] != -2 && ChessMatrix[i][figureX] != -5) {
+                                result.push(i);
+                            }
+                        }
+
+                        if (result.length == 0) {
+                            return -1;
+                        }
+
+                        return result[getRandomInt(result.length)];
+
+                        break;
+                    }
+
+                    case 'DOWN': {
+
+                        for (var i = startIndex + 1; i < 8; i++) {
+                            if (ChessMatrix[i][figureX] != -2 && ChessMatrix[i][figureX] != -5) {
+                                result.push(i);
+                            }
+                        }
+
+                        if (result.length == 0) {
+                            return -1;
+                        }
+
+                        return result[getRandomInt(result.length)];
+
+                        break;
+                    }
+                }
+
+                break;
+            }
+
+        }
+
+        return -1;
+    }
+
+    //Заливка клеток с неподходящими значениями
+    function Rook_FillRowOrColum(axis) {
+
+        if (axis == 'X') {
+            for (var i = 0; i < 8; i++) {
+                if (ChessMatrix[figureY][i] != -5) {
+                    ChessMatrix[figureY][i] = -2;
+                }
+                
+            }
+            return;
+        }
+
+        if (axis == 'Y') {
+            for (var i = 0; i < 8; i++) {
+                if (ChessMatrix[i][figureX] != -5) {
+                    ChessMatrix[i][figureX] = -2;
+                }
+                
+            }
+            return;
+        }
+
+    }
+
+    /*CHESS END------------------------------------------------------------------------------------------*/
+
+
+
+
     //Получение рандомного числа
     function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
@@ -601,4 +995,9 @@
     $('#crossword-values').on('click', 'li', function () {
         CreateCrossword($(this).text())
     });
+
+    //Выбор слова для шахмат
+    /*$('#chess-values').on('click', 'li', function () {
+        CreateChess($(this).text())
+    });*/
 });
