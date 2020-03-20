@@ -1,0 +1,118 @@
+﻿@page 
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+    <div class="text-center">
+
+        <h1 class="display-4">Welcome</h1>
+
+        <form id="get-words-form" name="get-word-form" method="get">
+
+
+            <input autofocus maxlength="15" id="get-keyword" type="text" placeholder="Введите слово" />
+            <h5 id="input-Keyword-error" style="color:red"></h5>
+            <button id="submit" type="submit" class="button">Искать</button>
+
+        </form>
+
+        <div id="search-result">
+
+        </div>
+
+        <table id="table-res">
+            <tbody>
+                <tr>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                </tr>
+                <tr>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                </tr>
+                <tr>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                </tr>
+                <tr>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                    <td><input type="button" value=" " /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr />
+        <h1>СУДОКУ</h1>
+        <hr />
+
+        <table id="table-sudoku">
+            <tbody>
+                <tr>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                </tr>
+                <tr>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+
+                </tr>
+                <tr>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                </tr>
+                <tr>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                    <td><input type="text" value=" " /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ul id="sudoku-values">
+        </ul>
+
+        <hr />
+        <h1>КРОССВОРД</h1>
+        <hr />
+
+        <div id="crossword">
+
+        </div>
+        <ul id="crossword-values">
+        </ul>
+
+    </div>
+
+@section Scripts {
+
+    <script src="~/js/WordsScript.js" asp-append-version="true"></script>
+    
+}

@@ -1,0 +1,31 @@
+﻿table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 700px;
+    border-spacing:0;
+    border-color:none;
+}
+
+td, th {
+    /*border: 1px solid #dddddd;*/
+    text-align: left;
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    box-shadow:none;
+}
+
+tr {
+    box-shadow: none;
+}
+.ttt {
+    color:red;
+    font-weight:700;
+    border: 1px solid;
+}
+table>tbody>tr>td>input{
+    width:100%;
+    height: 100%;
+    border-width: 2px;
+    padding:0;
+}
