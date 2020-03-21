@@ -583,7 +583,8 @@
     /*CHESS START----------------------------------------------------------------------------------------*/
 
     let WordsForChess = []
-    let Direction = Object.freeze(['RIGHT', 'LEFT', 'UP', 'DOWN' ])
+    let Rook_Direction = Object.freeze(['RIGHT', 'LEFT', 'UP', 'DOWN' ])
+    let Bishop_Direction = Object.freeze(['RIGHT-DOWN', 'LEFT-UP', 'LEFT-DOWN', 'RIGHT-UP' ])
 
     let ChessMatrix = [
         [0,0,0,0,0,0,0,0],
@@ -595,7 +596,7 @@
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],]
 
-
+    //Сброс матрицы
     function ResetChessMatrix() {
         for (var i = 0; i < ChessMatrix.length; i++) {
 
@@ -616,14 +617,15 @@
             return item.length >= 5 && item.length <= 8;
         });
 
-        $('#chess-values').empty();
-        let list = $('#chess-values')
+        $('#сhess-values').empty();
+        let list = $('#сhess-values')
 
         for (var i = 0; i < WordsForChess.length; i++) {
             list.append("<li>" + WordsForChess[i] + "</li>")
         }
 
         CreateChess(WordsForChess[0]);
+        //CreateChess('икринка');
     }
 
 
@@ -631,12 +633,525 @@
     let figureY;
 
     //
-    function CreateChess(word, figure = 'rook') {
+    function CreateChess(word, figure = 'bishop') {
 
         ResetChessMatrix()
 
         figureX = getRandomInt(8);
         figureY = getRandomInt(8);
+
+        if (figure == 'rook') {
+            Rook(word);
+            return
+        }
+
+        if (figure == 'bishop') {
+            Bishop(word)
+            return
+        }
+        
+
+    }
+
+
+
+
+    /*BISHOP START---------------------------------------------------------------------------------------*/
+
+    //Слон
+    function Bishop(word) {
+
+        let lastX = figureX;
+        let lastY = figureY;
+
+        let needFill = false;
+
+        Bishop_PrepareField()
+
+        let letter;
+        let choice = 4;
+
+        let res = Bishop_CheckStartPosition(figureX, figureY);
+
+        if (res == -1) {
+            res = getRandomInt(choice);
+            needFill = true;
+        }
+
+        ChessMatrix[figureY][figureX] = -5;
+
+        Bishop_ShiftFigure(res, word[0]);
+
+        if (needFill) {
+
+            if (res == 0 || res == 1) {
+
+                if (lastX !== 7 && lastY !== 0) {
+
+                    for (var i = lastY - 1, j = lastX + 1; ; i-- , j++) {
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 0 || j == 7) {
+                            break;
+                        }
+                    }
+
+                }
+
+                if (lastX !== 0 && lastY !== 7) {
+
+                    for (var i = lastY + 1, j = lastX - 1; ; i++ , j--) {
+
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 7 || j == 0) {
+                            break;
+                        }
+                    }
+                }
+
+            }
+        
+            if (res == 2 || res == 3) {
+                if (lastX !== 0 && lastY != 0) {
+
+                    for (var i = lastY - 1, j = lastX - 1; ; i-- , j--) {
+
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 0 || j == 0) {
+                            break;
+                        }
+                    }
+
+                }
+
+                if (lastX !== 7 && lastY != 7) {
+
+                    for (var i = lastY + 1, j = lastX + 1; ; i++ , j++) {
+
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 7 || j == 7) {
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+        
+
+        for (var i = 1; i < word.length; i++) {
+            letter = word[i];
+
+            if (res == 0 || res == 1) {
+                res = getRandomInt(2) + 2;
+            }
+            else if (res == 2 || res == 3) {
+                res = getRandomInt(2);
+            }
+
+            Bishop_ShiftFigure(res, letter)
+
+        }
+    }
+
+    //Проверка стартовой позиции фигуры
+    function Bishop_CheckStartPosition(X, Y) {
+
+        if ((X == 0 && Y == 0) || (X == 1 && Y == 0) || (X == 0 && Y == 1)) {
+            return 0;
+        }
+        else if ((X == 7 && Y == 7) || (X == 7 && Y == 6) || (X == 6 && Y == 7)) {
+            return 1;
+        }
+        else if ((X == 7 && Y == 0) || (X == 6 && Y == 0) || (X == 7 && Y == 1)) {
+            return 2;
+        }
+        else if ((X == 0 && Y == 7) || (X == 0 && Y == 6) || (X == 1 && Y == 7)) {
+            return 3
+        }
+
+        return -1;
+
+    }
+
+    //Подготовка поля
+    function Bishop_PrepareField() {
+        ChessMatrix[0][0] = -2;
+        ChessMatrix[7][0] = -2;
+        ChessMatrix[7][7] = -2;
+        ChessMatrix[0][7] = -2;
+
+        ChessMatrix[0][1] = -2;
+        ChessMatrix[1][0] = -2;
+        ChessMatrix[6][0] = -2;
+        ChessMatrix[7][1] = -2;
+
+        ChessMatrix[0][6] = -2;
+        ChessMatrix[1][7] = -2;
+        ChessMatrix[6][7] = -2;
+        ChessMatrix[7][6] = -2;
+    }
+
+    function Bishop_ShiftFigure(direction, letter) {
+
+        let shift;
+
+        switch (Bishop_Direction[direction]) {
+            case 'RIGHT-UP': {
+
+                shift = Bishop_CheckDiagonalBishop('RIGHT-UP')
+
+                if (shift === -1) {
+
+                    shift = Bishop_CheckDiagonalBishop('LEFT-DOWN')
+                }
+
+                if (shift === -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+
+                figureY = shift[0]
+                figureX = shift[1]
+
+                ChessMatrix[figureY][figureX] = -5;
+
+                Bishop_FillDiagonal('RIGHT-UP')
+
+                break;
+            }
+
+            case 'LEFT-DOWN': {
+
+                shift = Bishop_CheckDiagonalBishop('LEFT-DOWN')
+
+                if (shift === -1) {
+
+                    shift = Bishop_CheckDiagonalBishop('RIGHT-UP')
+                }
+
+                if (shift === -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+
+                figureY = shift[0]
+                figureX = shift[1]
+
+                ChessMatrix[figureY][figureX] = -5;
+
+                Bishop_FillDiagonal('LEFT-DOWN')
+
+                break;
+            }
+
+            case 'LEFT-UP': {
+
+                shift = Bishop_CheckDiagonalBishop('LEFT-UP')
+
+                if (shift === -1) {
+
+                    shift = Bishop_CheckDiagonalBishop('RIGHT-DOWN')
+                }
+
+                if (shift === -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+
+                figureY = shift[0]
+                figureX = shift[1]
+
+                ChessMatrix[figureY][figureX] = -5;
+                
+                Bishop_FillDiagonal('LEFT-UP')
+
+                break;
+            }
+
+            case 'RIGHT-DOWN': {
+
+                shift = Bishop_CheckDiagonalBishop('RIGHT-DOWN')
+
+                if (shift === -1) {
+
+                    shift = Bishop_CheckDiagonalBishop('LEFT-UP')
+                }
+
+                if (shift === -1) {
+                    console.log('Не удалось')
+                    return false;
+                }
+
+
+                figureY = shift[0]
+                figureX = shift[1]
+
+                ChessMatrix[figureY][figureX] = -5;
+
+                Bishop_FillDiagonal('RIGHT-DOWN')
+
+                break;
+            }
+
+        }
+    }
+
+    //Нахождение клетки для вставки буквы
+    function Bishop_CheckDiagonalBishop(direction) {
+
+        switch (direction) {
+            case 'RIGHT-UP': {
+
+                if (figureX == 7 || figureY == 0) {
+                    return -1;
+                }
+                else {
+                    return Bishop_FindIndexesForChess(figureX, figureY, 'RIGHT-UP')
+                }
+
+                break;
+            }
+
+            case 'LEFT-DOWN': {
+
+                if (figureX == 0 || figureY == 7) {
+                    return -1;
+                }
+                else {
+                    return Bishop_FindIndexesForChess(figureX, figureY, 'LEFT-DOWN')
+                }
+
+                break;
+            }
+
+            case 'LEFT-UP': {
+
+                if (figureX == 0 || figureY == 0) {
+                    return -1;
+                }
+                else {
+                    return Bishop_FindIndexesForChess(figureX, figureY, 'LEFT-UP')
+                }
+
+                break;
+            }
+
+            case 'RIGHT-DOWN': {
+
+                if (figureX == 7 || figureY == 7) {
+                    return -1;
+                }
+                else {
+                    return Bishop_FindIndexesForChess(figureX, figureY, 'RIGHT-DOWN')
+                }
+
+                break;
+            }
+
+        }
+
+        return -1;
+    }
+
+    //Нахождение клеток для вставки букв
+    function Bishop_FindIndexesForChess(X, Y, direction) {
+
+        let result = [];
+
+        switch (direction) {
+            case 'RIGHT-UP': {
+
+                for (var i = Y - 1, j = X + 1; ; i-- , j++) {
+                    if (ChessMatrix[i][j] == 0) {
+                        result.push([i, j]);
+                    }
+
+                    if (i == 0 || j == 7) {
+                        break;
+                    }
+                }
+
+                if (result.length == 0) {
+                    return -1;
+                }
+
+                return result[getRandomInt(result.length)];
+
+                break;
+            }
+
+            case 'LEFT-DOWN': {
+
+                for (var i = Y + 1, j = X - 1 ; ; i++ , j--) {
+
+                    if (ChessMatrix[i][j] == 0) {
+                        result.push([i, j]);
+                    }
+
+                    if (i == 7 || j == 0) {
+                        break;
+                    }
+                }
+
+                if (result.length == 0) {
+                    return -1;
+                }
+
+                return result[getRandomInt(result.length)];
+
+                break;
+            }
+
+            case 'LEFT-UP': {
+
+                for (var i = Y - 1, j = X - 1; ; i-- , j--) {
+
+                    if (ChessMatrix[i][j] == 0) {
+                        result.push([i, j]);
+                    }
+
+                    if (i == 0 || j == 0) {
+                        break;
+                    }
+                }
+
+                if (result.length == 0) {
+                    return -1;
+                }
+
+                return result[getRandomInt(result.length)];
+
+                break;
+            }
+
+            case 'RIGHT-DOWN': {
+
+                for (var i = Y + 1, j = X + 1; ; i++ , j++) {
+
+                    if (ChessMatrix[i][j] == 0) {
+                        result.push([i, j]);
+                    }
+
+                    if (i == 7 || j == 7) {
+                        break;
+                    }
+                }
+
+                if (result.length == 0) {
+                    return -1;
+                }
+
+                return result[getRandomInt(result.length)];
+
+                break;
+            }
+
+        }
+
+        return -1;
+    }
+
+    //Заливка клеток с неподходящими значениями
+    function Bishop_FillDiagonal(direction) {
+
+        switch (direction) {
+            case 'RIGHT-UP':
+            case 'LEFT-DOWN': {
+
+                if (figureX !== 7 && figureY !== 0) {
+
+                    for (var i = figureY - 1, j = figureX + 1; ; i-- , j++) {
+                        if (ChessMatrix[i][j] == 0 ) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 0 || j == 7) {
+                            break;
+                        }
+                    }
+
+                }
+
+                if (figureX !== 0 && figureY !== 7) {
+
+                    for (var i = figureY + 1, j = figureX - 1; ; i++ , j--) {
+
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 7 || j == 0) {
+                            break;
+                        }
+                    }
+                }
+                
+                break;
+            }
+
+            case 'LEFT-UP': 
+            case 'RIGHT-DOWN': {
+
+                if (figureX !== 0 && figureY != 0) {
+
+                    for (var i = figureY - 1, j = figureX - 1; ; i-- , j--) {
+
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 0 || j == 0) {
+                            break;
+                        }
+                    }
+
+                }
+
+                if (figureX !== 7 && figureY != 7) {
+
+                    for (var i = figureY + 1, j = figureX + 1; ; i++ , j++) {
+
+                        if (ChessMatrix[i][j] == 0) {
+                            ChessMatrix[i][j] = -2
+                        }
+
+                        if (i == 7 || j == 7) {
+                            break;
+                        }
+                    }
+
+                }
+
+                break;
+            }
+
+        }
+
+    }
+
+    /*BISHOP END-----------------------------------------------------------------------------------------*/
+
+
+
+    /*ROOK START-----------------------------------------------------------------------------------------*/
+
+    //Ладья
+    function Rook(word) {
 
         let lastX = figureX;
         let lastY = figureY;
@@ -645,10 +1160,10 @@
 
         let letter;
         let choice = 4;
-         
+
         let tempRand = getRandomInt(choice);
 
-        ShiftFigure(tempRand, word[0]);
+        Rook_ShiftFigure(tempRand, word[0]);
 
         if (tempRand == 0 || tempRand == 1) {
 
@@ -656,7 +1171,7 @@
                 if (ChessMatrix[i][lastX] != -5) {
                     ChessMatrix[i][lastX] = -2;
                 }
-                
+
             }
         }
 
@@ -666,7 +1181,7 @@
                 if (ChessMatrix[lastY][i] != -5) {
                     ChessMatrix[lastY][i] = -2;
                 }
-                
+
             }
         }
 
@@ -680,25 +1195,24 @@
                 tempRand = getRandomInt(2);
             }
 
-            ShiftFigure(tempRand, letter)
-            
-        }
+            Rook_ShiftFigure(tempRand, letter)
 
+        }
     }
 
     //Перемещение фигуры
-    function ShiftFigure(direction, letter) {
+    function Rook_ShiftFigure(direction, letter) {
 
         let shift;
 
-        switch (Direction[direction]) {
+        switch (Rook_Direction[direction]) {
             case 'RIGHT': {
 
-                shift = CheckRowOrColumRook('RIGHT')
+                shift = Rook_CheckRowOrColumRook('RIGHT')
 
                 if (shift == -1) {
 
-                    shift = CheckRowOrColumRook('LEFT')
+                    shift = Rook_CheckRowOrColumRook('LEFT')
                 }
 
                 if (shift == -1) {
@@ -717,11 +1231,11 @@
 
             case 'LEFT': {
 
-                shift = CheckRowOrColumRook('LEFT')
+                shift = Rook_CheckRowOrColumRook('LEFT')
 
                 if (shift == -1) {
 
-                    shift = CheckRowOrColumRook('RIGHT')
+                    shift = Rook_CheckRowOrColumRook('RIGHT')
                 }
 
                 if (shift == -1) {
@@ -740,11 +1254,11 @@
 
             case 'UP': {
 
-                shift = CheckRowOrColumRook('UP')
+                shift = Rook_CheckRowOrColumRook('UP')
 
                 if (shift == -1) {
 
-                    shift = CheckRowOrColumRook('DOWN')
+                    shift = Rook_CheckRowOrColumRook('DOWN')
                 }
 
                 if (shift == -1) {
@@ -763,11 +1277,11 @@
 
             case 'DOWN': {
 
-                shift = CheckRowOrColumRook('DOWN')
+                shift = Rook_CheckRowOrColumRook('DOWN')
 
                 if (shift == -1) {
 
-                    shift = CheckRowOrColumRook('UP')
+                    shift = Rook_CheckRowOrColumRook('UP')
                 }
 
                 if (shift == -1) {
@@ -788,7 +1302,7 @@
     }
 
     //Нахождение клетки для вставки буквы
-    function CheckRowOrColumRook(direction) {
+    function Rook_CheckRowOrColumRook(direction) {
 
         switch (direction) {
             case 'RIGHT': {
@@ -797,7 +1311,7 @@
                     return -1;
                 }
                 else {            
-                    return FindIndexesForChess('X', figureX, 'RIGHT')
+                    return Rook_FindIndexesForChess('X', figureX, 'RIGHT')
                 }
 
                 break;
@@ -809,7 +1323,7 @@
                     return -1;
                 }
                 else {
-                    return FindIndexesForChess('X', figureX, 'LEFT')
+                    return Rook_FindIndexesForChess('X', figureX, 'LEFT')
                 }
               
                 break;
@@ -821,7 +1335,7 @@
                     return -1;
                 }
                 else {
-                    return FindIndexesForChess('Y', figureY, 'UP')
+                    return Rook_FindIndexesForChess('Y', figureY, 'UP')
                 }
 
                 break;
@@ -833,7 +1347,7 @@
                     return -1;
                 }
                 else {
-                    return FindIndexesForChess('Y', figureY, 'DOWN')
+                    return Rook_FindIndexesForChess('Y', figureY, 'DOWN')
                 }
 
                 break;
@@ -845,7 +1359,7 @@
     }
 
     //Нахождение клеток для вставки букв
-    function FindIndexesForChess(axis, startIndex, direction) {
+    function Rook_FindIndexesForChess(axis, startIndex, direction) {
 
         let result = [];
 
@@ -964,6 +1478,8 @@
         }
 
     }
+
+    /*ROOK END-------------------------------------------------------------------------------------------*/
 
     /*CHESS END------------------------------------------------------------------------------------------*/
 
