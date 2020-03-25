@@ -1,210 +1,318 @@
-﻿@page 
+﻿@page
+
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-    <div class="text-center">
+<div class="text-center">
 
-        <h1 class="display-4">Welcome</h1>
+    <section id="search-section">
 
-        <form id="get-words-form" name="get-word-form" method="get">
+        <div>
+            <div class="container">
+
+                <div class="div-key-word">
+                    <div>
+                        <h1 class="key-word">КАРТИНА</h1>
+                        <hr class="underline" />
+                    </div>
+                </div>
+
+                <form id="get-words-form" name="get-word-form" method="get">
+
+                    <div>
+                        <input maxlength="15" id="get-keyword" type="text" placeholder="Введите слово" />
+                        <button class="submit-button" id="submit" type="submit">Искать</button>
 
 
-            <input autofocus maxlength="15" id="get-keyword" type="text" placeholder="Введите слово" />
-            <h5 id="input-Keyword-error" style="color:red"></h5>
-            <button id="submit" type="submit" class="button">Искать</button>
 
-        </form>
+                        <h5 id="input-Keyword-error" style="color:red"></h5>
+                    </div>
 
-        <div id="search-result">
+                </form>
+
+            </div>
+        </div>
+
+    </section>
+
+
+    <section id="words-result-section">
+        <div>
+            <div class="container">
+
+                <div id="search-result">
+
+                </div>
+
+                <table>
+                    <tbody>
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <tr>
+                                @for (int j = 0; j < 16; j++)
+                                {
+                                    <td>*</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </section>
+
+    <table id="table-res">
+        <tbody>
+            <tr>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+            </tr>
+            <tr>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+            </tr>
+            <tr>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+            </tr>
+            <tr>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+                <td><input type="button" value=" " /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <section id="sudoku-section">
+        <div class="container">
+            <div class="row col-md-12 d-flex justify-content-center">
+
+                <div>
+                    <h2 class="header-section">СУДОКУ</h2>
+                    <hr class="underline" />
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 col-sm-12 d-flex justify-content-center">
+
+                    <table id="table-sudoku">
+                        <tbody>
+                            @for (int i = 0; i < 4; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < 4; j++)
+                                    {
+                                        <td><span>d</span></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+                    <div class="row">
+                        <h4 class="list-header">Выберите слово:</h4>
+
+                        <div id="sudoku-values" class="select-box">
+
+                            <div class="options-container">
+
+                            </div>
+
+                            <div class="selected">
+                                Нет значений
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="crossword-section">
+
+        <div class="container">
+            <div class="row col-md-12 d-flex justify-content-center">
+
+                <div>
+                    <h2 class="header-section">КРОССВОРД</h2>
+                    <hr class="underline" />
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 col-sm-12 d-flex justify-content-center">
+
+                    <table id="table-crossword">
+                        <tbody>
+                            @for (int i = 0; i < 8; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < 7; j++)
+                                    {
+                                        <td><span></span></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+                    <div class="row">
+                        <h4 class="list-header">Выберите слово:</h4>
+                        <div class="row col-md-12">
+
+
+                            <div id="crossword-values" class="select-box">
+
+                                <div class="options-container">
+
+                                </div>
+
+                                <div class="selected">
+                                    Нет значений
+                                </div>
+
+                            </div>
+
+                            <div id="crossword-repeat-btn" class="repeat-btn">
+                                <i class="fas fa-redo fa-lg"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 
-        <table id="table-res">
-            <tbody>
-                <tr>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                </tr>
-                <tr>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                </tr>
-                <tr>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                </tr>
-                <tr>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                    <td><input type="button" value=" " /></td>
-                </tr>
-            </tbody>
-        </table>
+    </section>
 
-        <hr />
-        <h1>СУДОКУ</h1>
-        <hr />
 
-        <table id="table-sudoku">
-            <tbody>
-                <tr>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
+    <section id="chess-section">
 
-                </tr>
-                <tr>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                    <td><input type="text" value=" " /></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="container">
+            <div class="row col-md-12 d-flex justify-content-center">
 
-        <ul id="sudoku-values">
-        </ul>
+                <div>
+                    <h2 class="header-section">ШАХМАТЫ</h2>
+                    <hr class="underline" />
+                </div>
 
-        <hr />
-        <h1>КРОССВОРД</h1>
-        <hr />
+            </div>
 
-        <div id="crossword">
+            <div class="row">
+
+                <div class="col-md-6 col-sm-12 d-flex justify-content-center">
+
+                    <table id="table-chess">
+                        <tbody>
+                            @for (int i = 0; i < 8; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < 8; j++)
+                                    {
+                                        <td><span></span></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+
+                    <div class="row">
+                        <h4 class="list-header">Выберите фигуру:</h4>
+                        <div class="row col-md-12">
+
+                            <div class="chess-figure">
+                                <i class="fas fa-chess-rook fa-lg"></i>
+                            </div>
+
+                            <div class="chess-figure">
+                                <i class="fas fa-chess-bishop fa-lg"></i>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h4 class="list-header">Выберите слово:</h4>
+                        <div class="row col-md-12">
+
+
+                            <div class="select-box">
+
+                                <div class="options-container">
+
+                                </div>
+
+                                <div class="selected">
+                                    Нет значений
+                                </div>
+
+                            </div>
+
+                            <div class="repeat-btn">
+                                <i class="fas fa-redo fa-lg"></i>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
-        <ul id="crossword-values">
-        </ul>
 
-        <hr />
-        <h1>ШАХМАТЫ</h1>
-        <hr />
 
-        <table id="Chess">
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
 
-        <ul id="сhess-values">
-        </ul>
 
-    </div>
+    </section>
+
+</div>
 
 @section Scripts {
 
     <script src="~/js/WordsScript.js" asp-append-version="true"></script>
-    
+
 }

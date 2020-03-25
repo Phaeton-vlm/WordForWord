@@ -7022,7 +7022,7 @@ button.bg-dark:focus {
   flex-shrink: 1 !important;
 }
 
-.justify-content-start {
+.justify-content-center {
   -ms-flex-pack: start !important;
   justify-content: flex-start !important;
 }

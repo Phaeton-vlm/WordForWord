@@ -12,7 +12,7 @@
     //Поиск слов по ключевому слову
     $('#get-words-form').submit(function () {
 
-        Reset()
+        //Reset()
 
         Keyword = $('#get-keyword').val().toLowerCase().trim()
 
@@ -21,6 +21,8 @@
         }
 
         KeyWordSet = new Set(Keyword.split(''))
+
+        $('.key-word').text(Keyword);
 
         $.ajax({
             type: 'GET',
@@ -107,8 +109,8 @@
 
             //SetFillword();
             //CreateListWordsForSudoku();
-            //CreateListWordsForCrossword();
-            CreateListWordsForChess();
+            CreateListWordsForCrossword();
+            //CreateListWordsForChess();
             //console.log("конец AfterGettingResults")
 
         }
@@ -120,17 +122,16 @@
 
     }
 
-    
+    /*WORDS START----------------------------------------------------------------------------------------*/
     function InsertData(data) {
 
         var tempArr = CreateWordsSet(data)
 
-        //------------------
         DisplayWords = tempArr.slice();
 
-        for (var i = 0; i < tempArr.length; i++) {
-            $('#search-result').append('<h6>' + tempArr[i] + '</h6>')
-        }
+        //for (var i = 0; i < tempArr.length; i++) {
+        //    $('#search-result').append('<h6>' + tempArr[i] + '</h6>')
+        //}
 
         for (var i = 2; ; i++) {
 
@@ -145,9 +146,11 @@
             }
         }
 
-        if (CheckWodsForRequiredValues()) {
+        //CreateDisplayWordsArray()
+        if (true) {
             return true
         }
+        
 
         console.log('InsertData')
         console.log(Words)
@@ -165,6 +168,31 @@
         }
 
         return WordsSet;
+    }
+
+    const MAX_SYMBOLS_COUNT = 80
+    let currenSymbols = 0;
+
+    function CreateDisplayWordsArray(){
+
+        let added = 5
+        
+        for (var i = 0, j = 3; i < 3; i++, j++) {
+            added = (j + 1) + AddFirstWords(j, added);
+        }
+
+        console.log(DisplayWords)
+
+
+        tempArr = []
+        for (var i = 0; i < Words.length; i++) {
+
+            
+           
+
+        }
+        
+
     }
 
     function CheckWodsForRequiredValues() {
@@ -193,7 +221,30 @@
         return true;
     }
 
+    function AddFirstWords(count, added) {
 
+        let tempArr = Words['|' + count + '|'].slice();
+
+        if (tempArr.length !== 0) {
+
+            Shuffle(tempArr)
+
+            for (var i = 0; i < tempArr.length; i++) {
+
+                DisplayWords.push(tempArr[i]);
+                currenSymbols += count
+                added--;
+
+                if (added == 0) {
+                    break;
+                }
+            }
+        }
+
+        return added;
+    }
+  
+    /*WORDS END------------------------------------------------------------------------------------------*/
 
     var FillWordValues = []
 
@@ -321,12 +372,10 @@
     /*SUDOKU START---------------------------------------------------------------------------------------*/
 
     let WordsForSudoku = []
+    let sudokuList = $('#sudoku-values .options-container:eq(0)');
 
     //Создание списка слов для судоку
     function CreateListWordsForSudoku() {
-
-        //console.log('CreateListWordsForSudoku')
-        //console.log(DisplayWords)
 
         WordsForSudoku = DisplayWords.filter(function (item) {
             return item.length == 4;
@@ -336,13 +385,11 @@
             //Нет необходимых значений
             return false;
         }
-
-
-        $('#sudoku-values').empty();
-        let list = $('#sudoku-values')
+       
+        sudokuList.empty();
 
         for (var i = 0; i < WordsForSudoku.length; i++) {
-            list.append("<li>" + WordsForSudoku[i] +"</li>")
+            sudokuList.append('<div class="option"><input type="radio" class="radio"  id="' + WordsForSudoku[i] + '" name="sudokuItem" /> <label for=' + WordsForSudoku[i] + '>' + WordsForSudoku[i] + '</label> </div >');
         }
 
         SetSudoku(WordsForSudoku[0])
@@ -350,31 +397,33 @@
         return false;
     }
 
+    let tableSudoku = $('#table-sudoku tr > td > span');
+
     //Очистка значений таблицы судоку
     function ClearSudokuTable() {
-        $('#table-sudoku tr > td > input').each(function (indx, element) {
-            $(this).val(' ');
-        });
+        for (var i = 0; i < tableSudoku.length; i++) {
+            tableSudoku[i].innerText = ' '; 
+        }
     }
 
     //Формирование значений для судоку
     function SetSudoku(value) {
-
-        ClearSudokuTable() 
         
+        ClearSudokuTable() 
+        selectedSudoku.text(value)
+
         const ROWS = 4
         const COLUMS = 4
         const DONTMOVE = 1
 
-        let inputs = $('#table-sudoku tr > td > input');
         var valueArr = value.split('');
         console.log(valueArr)
 
-        inputs[0].value = valueArr[0];
-        inputs[5].value = valueArr[0];
-        inputs[10].value = valueArr[1];
-        inputs[15].value = valueArr[2];
-        inputs[12].value = valueArr[3];
+        tableSudoku[0].innerText = valueArr[0];
+        tableSudoku[5].innerText= valueArr[0];
+        tableSudoku[10].innerText = valueArr[1];
+        tableSudoku[15].innerText  = valueArr[2];
+        tableSudoku[12].innerText = valueArr[3];
 
         let curRowValues = []
         let tempArr = []
@@ -383,7 +432,7 @@
         for (var i = 0, z = 0; i < ROWS; i++) {
 
             for (var j = 0; j < COLUMS; j++) {
-                curRowValues[j] = inputs[z].value;
+                curRowValues[j] = tableSudoku[z].innerText.toLowerCase();
                 z++;            
             }
 
@@ -420,8 +469,8 @@
 
             for (var c = COLUMS * currentRow, fC = 0, tt = 0; tt < COLUMS; c++, tt++) {
 
-                if (inputs[c].value == ' ') {
-                    inputs[c].value = tempArr[fC]
+                if (tableSudoku[c].innerText == '') {
+                    tableSudoku[c].innerText = tempArr[fC]
                     fC++;
                 }
             }
@@ -432,79 +481,89 @@
 
     /*SUDOKU END-----------------------------------------------------------------------------------------*/
 
-
+    
 
     /*CROSSWORD START------------------------------------------------------------------------------------*/
 
     let WordsForCrossword = []
+    let crosswordList = $('#crossword-values .options-container:eq(0)');
+    let RightWordsForCrosswordCopy = [];
 
     //Создание списка слов для кроссворда
     function CreateListWordsForCrossword() {
-
+       
         WordsForCrossword = DisplayWords.filter(function (item) {
             return item.length >= 5 && item.length <= 8;
         });
 
-        $('#crossword-values').empty();
-        let list = $('#crossword-values')
-
-        for (var i = 0; i < WordsForCrossword.length; i++) {
-            list.append("<li>" + WordsForCrossword[i] + "</li>")
+        if (WordsForCrossword.length == 0) {
+            //ошибка
         }
 
-        for (var i = 0; i < WordsForCrossword.length; i++) {
-            let res = CreateCrossword(WordsForCrossword[i]);
+        RightWordsForCrosswordCopy = DisplayWords.filter(function (item) {
+            return item.length <= 7;
+        });
 
-            if (!res) {
-                WordsForCrossword.splice(i, 1);
-                i--;
-            } else {
-                return true;
-            }
+
+        crosswordList.empty();
+
+        for (var i = 0; i < WordsForCrossword.length; i++) {
+            crosswordList.append('<div class="option"><input type="radio" class="radio"  id="' + WordsForCrossword[i] + '" name="sudokuItem" /> <label for=' + WordsForCrossword[i] + '>' + WordsForCrossword[i] + '</label> </div >');
         }
 
-        console.log("Не удалос создать кроссворд")
+        CreateCrossword(WordsForCrossword[0]);
+
         return false;
     }
 
+    let tableCrossword = $('#table-crossword tr > td > span');
+    let tableCrosswordTd = $('#table-crossword tr > td');
+    let tableCurrentPosition = 0;
+
     //Создание кроссворда
     function CreateCrossword(secretWord) {
-      
-        //console.log('CreateCrossword----------------------------')
-        //console.log(secretWord)
 
-        $('#crossword').empty()
+        tableCurrentPosition = 0;
+        selectedCrossword.text(secretWord)
 
-        let RightWordsForCrossword = DisplayWords.filter(function (item) {
-            return item.length <= 7;
-        });
+        let RightWordsForCrossword = RightWordsForCrosswordCopy.slice();
 
         let delIndx = RightWordsForCrossword.indexOf(secretWord);
         RightWordsForCrossword.splice(delIndx, 1);
 
         Shuffle(RightWordsForCrossword)
 
-        let crossword = $('#crossword');
-        crossword.append('<table><tbody></tbody></table>')
-
         for (var i = 0; i < secretWord.length; i++) {
 
-            let completed = AddRowToCrossword(crossword, secretWord[i], RightWordsForCrossword)
+            let completed = AddRowToCrossword(secretWord[i], RightWordsForCrossword)
 
             if (!completed) {
                 console.log("Не удалось создать кроссворд")
                 return false;
             }       
+
+            if (i == (secretWord.length - 1) && i != 6) {
+                HideRemainingCells(i)
+            }
         }
 
         return true;
     }
 
-    //Заполнение строки в кроссворде
-    function AddRowToCrossword(crossword, letter, array) {
+    //Спрятать оставшиеся неиспользуемые клетки
+    function HideRemainingCells(startRow) {
 
-        //console.log('AddRowToCrossword')
-        //console.log(letter)
+        for (var i = startRow + 1; i < 8; i++) {
+
+            for (var j = 0; j < 7; j++) {
+                tableCrosswordTd[tableCurrentPosition].classList.add('tdInactive')
+                tableCurrentPosition++;
+            }
+        }
+    }
+
+    //Заполнение строки в кроссворде
+    function AddRowToCrossword(letter, array) {
 
         let word;
         let indxLetter;
@@ -513,7 +572,6 @@
 
             word = array[i];
             indxLetter = FindIndexes(letter, word);
-            //console.log(indxLetter)
 
             if (indxLetter == -1 || indxLetter > 3 || (word.length - (indxLetter + 1)) > 3) {
                 continue;
@@ -521,25 +579,22 @@
 
             array.splice(i, 1);
 
-            //console.log(word)
-
             let wordStart = 3 - indxLetter;
             let wordEnd = wordStart + (word.length - 1);
-
-            $('#crossword > table > tbody').append('<tr></tr>')
-
-            let currentRow = crossword.find("tr:last")
 
             for (var j = 0, l = 0; j < 7; j++) {
 
                 if (j >= wordStart && j <= wordEnd) {
 
-                    currentRow.append('<td class="ttt">' + word[l] + '</td>')
+                    tableCrossword[tableCurrentPosition].innerText = word[l]
+                    tableCrosswordTd[tableCurrentPosition].classList.remove('tdInactive')
                     l++;
                 }
                 else {
-                    currentRow.append('<td ></td>')
+                    tableCrossword[tableCurrentPosition].innerText = '';
+                    tableCrosswordTd[tableCurrentPosition].classList.add('tdInactive');
                 }
+                tableCurrentPosition++;
             }
             return true;
         }
@@ -559,9 +614,6 @@
                 break;
             }
         }
-
-        //console.log(word)
-        //console.log(result)
 
         if (result.length == 1) {
             return result[0];
@@ -607,7 +659,7 @@
         }
     }
 
-    //Создание списка допустимых слов для "шахмат"
+    //Создание списка допустимых слов для шахмат
     function CreateListWordsForChess() {
         console.log('CreateListWordsForChess');
 
@@ -624,16 +676,14 @@
             list.append("<li>" + WordsForChess[i] + "</li>")
         }
 
-        CreateChess(WordsForChess[0]);
-        //CreateChess('икринка');
+        CreateChess(WordsForChess[0], 'rook');
     }
-
 
     let figureX;
     let figureY;
 
-    //
-    function CreateChess(word, figure = 'bishop') {
+    //Создание шахмат
+    function CreateChess(word, figure) {
 
         ResetChessMatrix()
 
@@ -652,9 +702,6 @@
         
 
     }
-
-
-
 
     /*BISHOP START---------------------------------------------------------------------------------------*/
 
@@ -803,6 +850,7 @@
         ChessMatrix[7][6] = -2;
     }
 
+    //Сдвиг фигуры
     function Bishop_ShiftFigure(direction, letter) {
 
         let shift;
@@ -986,12 +1034,6 @@
                     }
                 }
 
-                if (result.length == 0) {
-                    return -1;
-                }
-
-                return result[getRandomInt(result.length)];
-
                 break;
             }
 
@@ -1007,12 +1049,6 @@
                         break;
                     }
                 }
-
-                if (result.length == 0) {
-                    return -1;
-                }
-
-                return result[getRandomInt(result.length)];
 
                 break;
             }
@@ -1030,12 +1066,6 @@
                     }
                 }
 
-                if (result.length == 0) {
-                    return -1;
-                }
-
-                return result[getRandomInt(result.length)];
-
                 break;
             }
 
@@ -1052,18 +1082,16 @@
                     }
                 }
 
-                if (result.length == 0) {
-                    return -1;
-                }
-
-                return result[getRandomInt(result.length)];
-
                 break;
             }
 
         }
 
-        return -1;
+        if (result.length == 0) {
+            return -1;
+        }
+
+        return result[getRandomInt(result.length)];
     }
 
     //Заливка клеток с неподходящими значениями
@@ -1500,20 +1528,65 @@
     }
 
 
-    //События
+    /*EVENTS---------------------------------------------------------------------------------------------*/
 
-    //Выбор слова для судоку
-    $('#sudoku-values').on('click', 'li', function () {
-        SetSudoku($(this).text())
+    /*SHARED*/
+
+    let optionsContainers = $('.select-box > .options-container');
+
+    $('body').on('mouseleave', '.select-box', function () {
+        optionsContainers.removeClass("active");
     });
+
+    /*SHARED*/
+
+    /*SUDOKU*/
+    const selectedSudoku = $("#sudoku-values .selected");
+    const optionsContainerSudoku = $("#sudoku-values  .options-container");
+
+    $(selectedSudoku).on('click', function () {
+        optionsContainerSudoku.toggleClass('active');
+    });
+
+    $(optionsContainerSudoku).on('click', '.option', function () {
+        let val = $(this).find('label').text();
+        console.log(selectedSudoku.text(val));
+        optionsContainerSudoku.removeClass("active");
+        SetSudoku(val);
+    });
+
+    /*SUDOKU*/
+
+    /*CROSSWORD*/
+    const selectedCrossword = $("#crossword-values .selected");
+    const optionsContainerCrossword = $("#crossword-values  .options-container");
+
+    $(selectedCrossword).on('click', function () {
+        optionsContainerCrossword.toggleClass('active');
+    });
+
+    $(optionsContainerCrossword).on('click', '.option', function () {
+        let val = $(this).find('label').text();
+        optionsContainerCrossword.removeClass("active");
+        CreateCrossword(val);
+    });
+
+    $('#crossword-repeat-btn').on('click', function () {
+        CreateCrossword(selectedCrossword.text());
+    });
+
+    /*CROSSWORD*/
+
 
     //Выбор слова для кросворда
-    $('#crossword-values').on('click', 'li', function () {
-        CreateCrossword($(this).text())
-    });
+    //$('#crossword-values').on('click', 'li', function () {
+    //    CreateCrossword($(this).text())
+    //});
 
     //Выбор слова для шахмат
     /*$('#chess-values').on('click', 'li', function () {
         CreateChess($(this).text())
     });*/
+
+
 });
