@@ -109,7 +109,7 @@
 
             //SetFillword();
             //CreateListWordsForSudoku();
-            CreateListWordsForCrossword();
+            //CreateListWordsForCrossword();
             //CreateListWordsForChess();
             //console.log("конец AfterGettingResults")
 
@@ -122,18 +122,20 @@
 
     }
 
+    //let arrr1 = ['333', '333', '333', '4444', '4444', '4444', '4444', '4444', '4444', '55555', '55555', '55555']
+    //let arrr1 = ['333', '333', '333', '4444', '4444', '666666', '666666', '666666', '666666','666666', '7777777']
+    //let arrr1 = ['333', '333','4444', '4444', '666666', '666666', '666666', '666666','666666', '7777777']
+    //let arrr1 = ['333', '333', '4444', '4444', '4444', '4444', '4444', '88888888', '88888888', '88888888']
+    //let arrr1 = ['333', '333', '4444', '4444', '4444', '4444', '4444','666666', '88888888', '88888888', '88888888']
     /*WORDS START----------------------------------------------------------------------------------------*/
     function InsertData(data) {
 
-        var tempArr = CreateWordsSet(data)
+        //var tempArr = CreateWordsSet(data)
+        var tempArr = arrr1
 
-        DisplayWords = tempArr.slice();
+        //DisplayWords = tempArr.slice();
 
-        //for (var i = 0; i < tempArr.length; i++) {
-        //    $('#search-result').append('<h6>' + tempArr[i] + '</h6>')
-        //}
-
-        for (var i = 2; ; i++) {
+        for (var i = 3; ; i++) {
 
             temp = tempArr.filter(item => item.length == i);
 
@@ -146,7 +148,8 @@
             }
         }
 
-        //CreateDisplayWordsArray()
+        CreateDisplayWordsArray()
+        /*
         if (true) {
             return true
         }
@@ -155,7 +158,7 @@
         console.log('InsertData')
         console.log(Words)
 
-        return false;
+        return false;*/
     }
 
     //Создание массива всех слов из полученных данных
@@ -171,27 +174,65 @@
     }
 
     const MAX_SYMBOLS_COUNT = 80
+    let MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 0;
     let currenSymbols = 0;
 
     function CreateDisplayWordsArray(){
+        
+        let notAddedWords = 0;  
+        let temp = 0;
 
         let added = 5
-        
-        for (var i = 0, j = 3; i < 3; i++, j++) {
-            added = (j + 1) + AddFirstWords(j, added);
+        notAddedWords += AddFirstWords(3, added);
+
+        added = 4 + notAddedWords;
+        temp = AddFirstWords(4, added);
+        if (temp == added) {
+            //Error(id,Невозможно собрать судоку)
+            return null;
         }
 
-        console.log(DisplayWords)
+        MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 9 - temp;
 
+        if (MAX_WORDS_SYMBOLS_FOR_KEY_WORD <= 4) {
+             //Error(id,Невозможно собрать кроссворд)
+            return null;
+        }
 
-        tempArr = []
-        for (var i = 0; i < Words.length; i++) {
+        added = 3;
+        let at = false;
+        for (var i = 5; i < MAX_WORDS_SYMBOLS_FOR_KEY_WORD + 1; i++) {
 
+            let lTemp = AddFirstWords(i, added)
+
+            if (lTemp == added && ((i + 1) == (MAX_WORDS_SYMBOLS_FOR_KEY_WORD + 1)) && !at) {
+                //Error(id,Невозможно собрать кроссворд)
+                return null;
+                break;
+            }
+
+            if (lTemp < added && !at) {
+                at = true;
+            }
             
-           
 
+            if (currenSymbols >= MAX_SYMBOLS_COUNT) {
+                break;
+            }
         }
-        
+
+
+        if (currenSymbols < MAX_SYMBOLS_COUNT) {
+            let tmp;
+
+            for (var i = 9; i <=15; i++) {
+                tmp = AddFirstWords(i, getRandomInt(10))
+
+                if (tmp == -1) {
+                    break;
+                }
+            }
+        }
 
     }
 
@@ -223,6 +264,10 @@
 
     function AddFirstWords(count, added) {
 
+        if (Words['|' + count + '|'] == undefined) {
+            return added;
+        }
+
         let tempArr = Words['|' + count + '|'].slice();
 
         if (tempArr.length !== 0) {
@@ -230,6 +275,10 @@
             Shuffle(tempArr)
 
             for (var i = 0; i < tempArr.length; i++) {
+
+                if (currenSymbols >= MAX_SYMBOLS_COUNT) {
+                    return -1;
+                }
 
                 DisplayWords.push(tempArr[i]);
                 currenSymbols += count
