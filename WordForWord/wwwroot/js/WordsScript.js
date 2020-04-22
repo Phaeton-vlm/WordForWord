@@ -6,8 +6,8 @@
     let Keyword = '';
     let KeyWordSet;
 
-    let MAX_KEYWORD_LENGTH = 15;
-    let MIN_KEYWORD_LENGTH = 4;
+    const MAX_KEYWORD_LENGTH = 15;
+    const MIN_KEYWORD_LENGTH = 4;
    
     //Поиск слов по ключевому слову
     $('#get-words-form').submit(function () {
@@ -110,7 +110,7 @@
             //SetFillword();
             //CreateListWordsForSudoku();
             //CreateListWordsForCrossword();
-            //CreateListWordsForChess();
+            CreateListWordsForChess();
             //console.log("конец AfterGettingResults")
 
         }
@@ -122,18 +122,11 @@
 
     }
 
-    //let arrr1 = ['333', '333', '333', '4444', '4444', '4444', '4444', '4444', '4444', '55555', '55555', '55555']
-    //let arrr1 = ['333', '333', '333', '4444', '4444', '666666', '666666', '666666', '666666','666666', '7777777']
-    //let arrr1 = ['333', '333','4444', '4444', '666666', '666666', '666666', '666666','666666', '7777777']
-    //let arrr1 = ['333', '333', '4444', '4444', '4444', '4444', '4444', '88888888', '88888888', '88888888']
-    //let arrr1 = ['333', '333', '4444', '4444', '4444', '4444', '4444','666666', '88888888', '88888888', '88888888']
+
     /*WORDS START----------------------------------------------------------------------------------------*/
     function InsertData(data) {
 
-        //var tempArr = CreateWordsSet(data)
-        var tempArr = arrr1
-
-        //DisplayWords = tempArr.slice();
+        var tempArr = CreateWordsSet(data)
 
         for (var i = 3; ; i++) {
 
@@ -148,17 +141,7 @@
             }
         }
 
-        CreateDisplayWordsArray()
-        /*
-        if (true) {
-            return true
-        }
-        
-
-        console.log('InsertData')
-        console.log(Words)
-
-        return false;*/
+        return CreateDisplayWordsArray()
     }
 
     //Создание массива всех слов из полученных данных
@@ -177,6 +160,7 @@
     let MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 0;
     let currenSymbols = 0;
 
+    //Создание массива исппользуемых слов
     function CreateDisplayWordsArray(){
         
         let notAddedWords = 0;  
@@ -189,14 +173,20 @@
         temp = AddFirstWords(4, added);
         if (temp == added) {
             //Error(id,Невозможно собрать судоку)
-            return null;
+            return false;
         }
 
-        MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 9 - temp;
+        if (temp == 0) {
+            MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 8;
+        }
+        else {
+            MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 9 - temp;
+        }
+       
 
         if (MAX_WORDS_SYMBOLS_FOR_KEY_WORD <= 4) {
              //Error(id,Невозможно собрать кроссворд)
-            return null;
+            return false;
         }
 
         added = 3;
@@ -207,8 +197,7 @@
 
             if (lTemp == added && ((i + 1) == (MAX_WORDS_SYMBOLS_FOR_KEY_WORD + 1)) && !at) {
                 //Error(id,Невозможно собрать кроссворд)
-                return null;
-                break;
+                return false;
             }
 
             if (lTemp < added && !at) {
@@ -221,47 +210,15 @@
             }
         }
 
+        AddOtherWords();
 
-        if (currenSymbols < MAX_SYMBOLS_COUNT) {
-            let tmp;
-
-            for (var i = 9; i <=15; i++) {
-                tmp = AddFirstWords(i, getRandomInt(10))
-
-                if (tmp == -1) {
-                    break;
-                }
-            }
-        }
-
-    }
-
-    function CheckWodsForRequiredValues() {
-
-        if (Words['|4|'] == undefined) {
-            console.log("Отсутствуют слова из 4 букв")
-
-            return false;
-        }
-
-        let requiredCount = 0;
-
-        for (var i = 7; i > 0; i--){
-
-            if (Words['|' + i + '|'] !== undefined) {
-                requiredCount += Words['|' + i + '|'].length;
-            }
-        }
-
-        if (requiredCount < 6) {
-            console.log("Недостаточно слов")
-
-            return false;
-        }
+        console.log(Words);
+        console.log(DisplayWords);
 
         return true;
     }
 
+    //Добавление слов в массив DisplayWords
     function AddFirstWords(count, added) {
 
         if (Words['|' + count + '|'] == undefined) {
@@ -291,6 +248,23 @@
         }
 
         return added;
+    }
+
+    //Добавление оставшихся слов
+    function AddOtherWords() {
+
+        if (currenSymbols < MAX_SYMBOLS_COUNT) {
+            let tmp;
+
+            for (var i = MAX_WORDS_SYMBOLS_FOR_KEY_WORD + 1; i <= 15; i++) {
+                tmp = AddFirstWords(i, 3)
+
+                if (tmp == -1) {
+                    break;
+                }
+            }
+        }
+
     }
   
     /*WORDS END------------------------------------------------------------------------------------------*/
@@ -410,12 +384,6 @@
             }
         });
 
-    }
-
-
-    function Reset() {
-        $('#crossword').empty()
-        $('#crossword-values').empty();
     }
 
     /*SUDOKU START---------------------------------------------------------------------------------------*/
@@ -542,7 +510,7 @@
     function CreateListWordsForCrossword() {
        
         WordsForCrossword = DisplayWords.filter(function (item) {
-            return item.length >= 5 && item.length <= 8;
+            return item.length >= 5 && item.length <= MAX_WORDS_SYMBOLS_FOR_KEY_WORD;
         });
 
         if (WordsForCrossword.length == 0) {
@@ -708,6 +676,9 @@
         }
     }
 
+    let chessList = $('#chess-values .options-container:eq(0)');
+    let tableChessTd = $('#table-chess tr > td > span');
+
     //Создание списка допустимых слов для шахмат
     function CreateListWordsForChess() {
         console.log('CreateListWordsForChess');
@@ -718,23 +689,69 @@
             return item.length >= 5 && item.length <= 8;
         });
 
-        $('#сhess-values').empty();
-        let list = $('#сhess-values')
+        chessList.empty();
 
         for (var i = 0; i < WordsForChess.length; i++) {
-            list.append("<li>" + WordsForChess[i] + "</li>")
+            chessList.append('<div class="option"><input type="radio" class="radio"  id="' + WordsForChess[i] + '" name="sudokuItem" /> <label for=' + WordsForChess[i] + '>' + WordsForChess[i] + '</label> </div >');
         }
 
-        CreateChess(WordsForChess[0], 'rook');
+        CreateChess(WordsForChess[0], 'bishop');
     }
 
     let figureX;
     let figureY;
 
+    const ROOK = $("#rook");
+    const BISHOP = $("#bishop");
+
+    let CURRENT_FIGURE;
+
+    //Перевод индекса двумерного массива в одномерный
+    function TwoDimensionalArrayIndexToOneDimensional(X, Y) {
+
+        if (Y == 0) {
+            return X;
+        }
+
+        if (Y > 0) {
+            return (8 * Y) + X
+        }
+
+        return -1;
+    } 
+
+    //Выбор шахматной фогуры
+    function SetFigureActive(figure) {
+
+        switch (figure) {
+            case 'rook': {
+                BISHOP.removeClass('chess-figure-active')
+                ROOK.toggleClass('chess-figure-active')
+                break;
+            }
+            case 'bishop': {
+                ROOK.removeClass('chess-figure-active')
+                BISHOP.toggleClass('chess-figure-active')
+                break;
+            }
+            default:
+        }
+    }
+
     //Создание шахмат
     function CreateChess(word, figure) {
 
+       
+        if (CURRENT_FIGURE != figure) {
+
+            CURRENT_FIGURE = figure;
+            SetFigureActive(figure)
+
+        }
+        
+        tableChessTd.empty();
         ResetChessMatrix()
+        selectedChess.text(word);
 
         figureX = getRandomInt(8);
         figureY = getRandomInt(8);
@@ -775,6 +792,8 @@
         }
 
         ChessMatrix[figureY][figureX] = -5;
+        tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = '<i class="fas fa-chess-bishop fa-lg"></i>';
+
 
         Bishop_ShiftFigure(res, word[0]);
 
@@ -924,6 +943,8 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
+
 
                 Bishop_FillDiagonal('RIGHT-UP')
 
@@ -949,6 +970,8 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
+
 
                 Bishop_FillDiagonal('LEFT-DOWN')
 
@@ -974,6 +997,8 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
+
                 
                 Bishop_FillDiagonal('LEFT-UP')
 
@@ -999,6 +1024,8 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
+
 
                 Bishop_FillDiagonal('RIGHT-DOWN')
 
@@ -1223,7 +1250,7 @@
 
     /*BISHOP END-----------------------------------------------------------------------------------------*/
 
-
+   
 
     /*ROOK START-----------------------------------------------------------------------------------------*/
 
@@ -1234,6 +1261,7 @@
         let lastY = figureY;
 
         ChessMatrix[figureY][figureX] = -5;
+        tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = '<i class="fas fa-chess-rook fa-lg"></i>';
 
         let letter;
         let choice = 4;
@@ -1298,6 +1326,7 @@
                 }
 
                 ChessMatrix[figureY][shift] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(shift, figureY)].innerText = letter;
 
                 Rook_FillRowOrColum('X')
 
@@ -1321,7 +1350,8 @@
                 }
 
                 ChessMatrix[figureY][shift] = -5;
-               
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(shift, figureY)].innerText = letter;
+
                 Rook_FillRowOrColum('X')
 
                 figureX = shift
@@ -1344,6 +1374,7 @@
                 }
 
                 ChessMatrix[shift][figureX] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, shift)].innerText = letter;
                 
                 Rook_FillRowOrColum('Y')
 
@@ -1367,6 +1398,7 @@
                 }
 
                 ChessMatrix[shift][figureX] = -5;
+                tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, shift)].innerText = letter;
 
                 Rook_FillRowOrColum('Y')
 
@@ -1625,6 +1657,34 @@
     });
 
     /*CROSSWORD*/
+
+    /*CHESS*/
+    const selectedChess = $("#chess-values .selected");
+    const optionsContainerChess = $("#chess-values  .options-container");
+
+    $(selectedChess).on('click', function () {
+        optionsContainerChess.toggleClass('active');
+    });
+
+    $(optionsContainerChess).on('click', '.option', function () {
+        let val = $(this).find('label').text();
+        optionsContainerChess.removeClass("active");
+        CreateChess(val, CURRENT_FIGURE);
+    });
+
+    $('#chess-repeat-btn').on('click', function () {
+        CreateChess(selectedChess.text(), CURRENT_FIGURE);
+    });
+
+    $('#rook').on('click', function () {
+        CreateChess(selectedChess.text(), 'rook');
+    });
+
+    $('#bishop').on('click', function () {
+        CreateChess(selectedChess.text(), 'bishop');
+    });
+
+    /*CHESS*/
 
 
     //Выбор слова для кросворда
