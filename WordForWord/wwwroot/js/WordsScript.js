@@ -8,11 +8,23 @@
 
     const MAX_KEYWORD_LENGTH = 15;
     const MIN_KEYWORD_LENGTH = 4;
-   
+
+
+    function ResetAll() {
+
+        //Ощистка поля со словами
+        ResetShowDisplayWordsSection();
+
+    }
+
+    function ResetShowDisplayWordsSection() {
+        searchResult.empty();
+    }
+
     //Поиск слов по ключевому слову
     $('#get-words-form').submit(function () {
 
-        //Reset()
+        ResetAll()
 
         Keyword = $('#get-keyword').val().toLowerCase().trim()
 
@@ -37,7 +49,7 @@
                 AfterGettingResults(data)
             }
         })
-      
+
         return false;
     });
 
@@ -107,10 +119,11 @@
 
         if (InsertData(data)) {
 
+            ShowDisplayWords();
             //SetFillword();
             //CreateListWordsForSudoku();
             //CreateListWordsForCrossword();
-            CreateListWordsForChess();
+            //CreateListWordsForChess();
             //console.log("конец AfterGettingResults")
 
         }
@@ -127,6 +140,8 @@
     function InsertData(data) {
 
         var tempArr = CreateWordsSet(data)
+
+        Words = [];
 
         for (var i = 3; ; i++) {
 
@@ -145,7 +160,7 @@
     }
 
     //Создание массива всех слов из полученных данных
-    function CreateWordsSet(data){
+    function CreateWordsSet(data) {
 
         let WordsSet = []
 
@@ -156,14 +171,18 @@
         return WordsSet;
     }
 
-    const MAX_SYMBOLS_COUNT = 80
+    const MAX_SYMBOLS_COUNT = 60
     let MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 0;
     let currenSymbols = 0;
 
     //Создание массива исппользуемых слов
-    function CreateDisplayWordsArray(){
+    function CreateDisplayWordsArray() {
+
         
-        let notAddedWords = 0;  
+        DisplayWords = [];
+        currenSymbols = 0;
+
+        let notAddedWords = 0;
         let temp = 0;
 
         let added = 5
@@ -182,10 +201,10 @@
         else {
             MAX_WORDS_SYMBOLS_FOR_KEY_WORD = 9 - temp;
         }
-       
+
 
         if (MAX_WORDS_SYMBOLS_FOR_KEY_WORD <= 4) {
-             //Error(id,Невозможно собрать кроссворд)
+            //Error(id,Невозможно собрать кроссворд)
             return false;
         }
 
@@ -203,7 +222,7 @@
             if (lTemp < added && !at) {
                 at = true;
             }
-            
+
 
             if (currenSymbols >= MAX_SYMBOLS_COUNT) {
                 break;
@@ -266,8 +285,72 @@
         }
 
     }
-  
+
     /*WORDS END------------------------------------------------------------------------------------------*/
+
+
+    /*WORDS DISPLAY--------------------------------------------------------------------------------------*/
+
+    let searchResult = $('#search-result');
+    let letterClasses = ['letter', 'letter letter-selected'];
+
+    //Отображение слов
+    function ShowDisplayWords() {
+
+        ResetShowDisplayWordsSection();
+
+        let res = '';
+        let insertedClass = '';
+        let rundomLetterSelection = getRandomInt(3) + 2;
+
+        DisplayWords.forEach(function (item, i) {
+
+            let htmlText = '<div class="word-res">';
+
+            for (let j = 0; j < item.length; j++) {
+
+                if (rundomLetterSelection == 0) {
+                    insertedClass = letterClasses[1];
+                    rundomLetterSelection = getRandomInt(3) + 2;
+                }
+                else {
+                    insertedClass = letterClasses[0]
+                    rundomLetterSelection--;
+                }
+
+                htmlText += '<div class="word-letter"><div class="' + insertedClass + '">' + item[j] + '</div ><div class="number">' + WordPosition(item[j]) + '</div></div>'
+
+            }
+
+            htmlText += '</div>';
+
+            res += htmlText
+        });
+
+        searchResult.append(res);
+
+    }
+
+    //Поиск номера слова
+    function WordPosition(letter) {
+
+        let i = 0;
+
+        for (let key of KeyWordSet.keys()) {
+
+            i++;
+
+            if (key === letter) {
+                return i;
+            }
+            
+        }
+
+        return -1;
+    }
+
+    /*WORDS DISPLAY--------------------------------------------------------------------------------------*/
+
 
     var FillWordValues = []
 
@@ -287,7 +370,7 @@
         let firstStepValues = FillWordValues.filter(item => item.length >= 5)
 
 
-        
+
 
         if (firstStepValues.length >= 2) {
 
@@ -329,12 +412,12 @@
                 SetTableRow(temp1, firstStepValues[temp2])
 
             }
-           
+
 
         }
 
         console.log(FillWordValues)
-       
+
         console.log("конец SetFillword")
 
     }
@@ -379,7 +462,7 @@
 
             if (indx >= randomVal) {
                 $(this).attr("value", word[i]);
-                i++        
+                i++
 
             }
         });
@@ -402,7 +485,7 @@
             //Нет необходимых значений
             return false;
         }
-       
+
         sudokuList.empty();
 
         for (var i = 0; i < WordsForSudoku.length; i++) {
@@ -419,14 +502,14 @@
     //Очистка значений таблицы судоку
     function ClearSudokuTable() {
         for (var i = 0; i < tableSudoku.length; i++) {
-            tableSudoku[i].innerText = ' '; 
+            tableSudoku[i].innerText = ' ';
         }
     }
 
     //Формирование значений для судоку
     function SetSudoku(value) {
-        
-        ClearSudokuTable() 
+
+        ClearSudokuTable()
         selectedSudoku.text(value)
 
         const ROWS = 4
@@ -437,20 +520,20 @@
         console.log(valueArr)
 
         tableSudoku[0].innerText = valueArr[0];
-        tableSudoku[5].innerText= valueArr[0];
+        tableSudoku[5].innerText = valueArr[0];
         tableSudoku[10].innerText = valueArr[1];
-        tableSudoku[15].innerText  = valueArr[2];
+        tableSudoku[15].innerText = valueArr[2];
         tableSudoku[12].innerText = valueArr[3];
 
         let curRowValues = []
         let tempArr = []
         let currentRow = 0;
-        
+
         for (var i = 0, z = 0; i < ROWS; i++) {
 
             for (var j = 0; j < COLUMS; j++) {
                 curRowValues[j] = tableSudoku[z].innerText.toLowerCase();
-                z++;            
+                z++;
             }
 
 
@@ -484,21 +567,21 @@
                 tempArr.push(tempArr.shift())
             }
 
-            for (var c = COLUMS * currentRow, fC = 0, tt = 0; tt < COLUMS; c++, tt++) {
+            for (var c = COLUMS * currentRow, fC = 0, tt = 0; tt < COLUMS; c++ , tt++) {
 
                 if (tableSudoku[c].innerText == '') {
                     tableSudoku[c].innerText = tempArr[fC]
                     fC++;
                 }
             }
-   
+
             currentRow++;
         }
     }
 
     /*SUDOKU END-----------------------------------------------------------------------------------------*/
 
-    
+
 
     /*CROSSWORD START------------------------------------------------------------------------------------*/
 
@@ -508,7 +591,7 @@
 
     //Создание списка слов для кроссворда
     function CreateListWordsForCrossword() {
-       
+
         WordsForCrossword = DisplayWords.filter(function (item) {
             return item.length >= 5 && item.length <= MAX_WORDS_SYMBOLS_FOR_KEY_WORD;
         });
@@ -557,7 +640,7 @@
             if (!completed) {
                 console.log("Не удалось создать кроссворд")
                 return false;
-            }       
+            }
 
             if (i == (secretWord.length - 1) && i != 6) {
                 HideRemainingCells(i)
@@ -652,18 +735,18 @@
     /*CHESS START----------------------------------------------------------------------------------------*/
 
     let WordsForChess = []
-    let Rook_Direction = Object.freeze(['RIGHT', 'LEFT', 'UP', 'DOWN' ])
-    let Bishop_Direction = Object.freeze(['RIGHT-DOWN', 'LEFT-UP', 'LEFT-DOWN', 'RIGHT-UP' ])
+    let Rook_Direction = Object.freeze(['RIGHT', 'LEFT', 'UP', 'DOWN'])
+    let Bishop_Direction = Object.freeze(['RIGHT-DOWN', 'LEFT-UP', 'LEFT-DOWN', 'RIGHT-UP'])
 
     let ChessMatrix = [
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],]
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],]
 
     //Сброс матрицы
     function ResetChessMatrix() {
@@ -718,7 +801,7 @@
         }
 
         return -1;
-    } 
+    }
 
     //Выбор шахматной фогуры
     function SetFigureActive(figure) {
@@ -741,14 +824,14 @@
     //Создание шахмат
     function CreateChess(word, figure) {
 
-       
+
         if (CURRENT_FIGURE != figure) {
 
             CURRENT_FIGURE = figure;
             SetFigureActive(figure)
 
         }
-        
+
         tableChessTd.empty();
         ResetChessMatrix()
         selectedChess.text(word);
@@ -765,7 +848,7 @@
             Bishop(word)
             return
         }
-        
+
 
     }
 
@@ -830,7 +913,7 @@
                 }
 
             }
-        
+
             if (res == 2 || res == 3) {
                 if (lastX !== 0 && lastY != 0) {
 
@@ -863,7 +946,7 @@
                 }
             }
         }
-        
+
 
         for (var i = 1; i < word.length; i++) {
             letter = word[i];
@@ -999,7 +1082,7 @@
                 ChessMatrix[figureY][figureX] = -5;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
 
-                
+
                 Bishop_FillDiagonal('LEFT-UP')
 
                 break;
@@ -1115,7 +1198,7 @@
 
             case 'LEFT-DOWN': {
 
-                for (var i = Y + 1, j = X - 1 ; ; i++ , j--) {
+                for (var i = Y + 1, j = X - 1; ; i++ , j--) {
 
                     if (ChessMatrix[i][j] == 0) {
                         result.push([i, j]);
@@ -1180,7 +1263,7 @@
                 if (figureX !== 7 && figureY !== 0) {
 
                     for (var i = figureY - 1, j = figureX + 1; ; i-- , j++) {
-                        if (ChessMatrix[i][j] == 0 ) {
+                        if (ChessMatrix[i][j] == 0) {
                             ChessMatrix[i][j] = -2
                         }
 
@@ -1204,11 +1287,11 @@
                         }
                     }
                 }
-                
+
                 break;
             }
 
-            case 'LEFT-UP': 
+            case 'LEFT-UP':
             case 'RIGHT-DOWN': {
 
                 if (figureX !== 0 && figureY != 0) {
@@ -1250,7 +1333,7 @@
 
     /*BISHOP END-----------------------------------------------------------------------------------------*/
 
-   
+
 
     /*ROOK START-----------------------------------------------------------------------------------------*/
 
@@ -1375,7 +1458,7 @@
 
                 ChessMatrix[shift][figureX] = -5;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, shift)].innerText = letter;
-                
+
                 Rook_FillRowOrColum('Y')
 
                 figureY = shift
@@ -1406,7 +1489,7 @@
 
                 break;
             }
-           
+
         }
     }
 
@@ -1419,7 +1502,7 @@
                 if (figureX == 7) {
                     return -1;
                 }
-                else {            
+                else {
                     return Rook_FindIndexesForChess('X', figureX, 'RIGHT')
                 }
 
@@ -1434,7 +1517,7 @@
                 else {
                     return Rook_FindIndexesForChess('X', figureX, 'LEFT')
                 }
-              
+
                 break;
             }
 
@@ -1493,7 +1576,7 @@
                         return result[getRandomInt(result.length)];
 
                         break;
-                    } 
+                    }
 
                     case 'LEFT': {
 
@@ -1510,7 +1593,7 @@
                         return result[getRandomInt(result.length)];
 
                         break;
-                    } 
+                    }
                 }
 
                 break;
@@ -1571,7 +1654,7 @@
                 if (ChessMatrix[figureY][i] != -5) {
                     ChessMatrix[figureY][i] = -2;
                 }
-                
+
             }
             return;
         }
@@ -1581,7 +1664,7 @@
                 if (ChessMatrix[i][figureX] != -5) {
                     ChessMatrix[i][figureX] = -2;
                 }
-                
+
             }
             return;
         }
@@ -1621,6 +1704,8 @@
 
     /*SHARED*/
 
+
+
     /*SUDOKU*/
     const selectedSudoku = $("#sudoku-values .selected");
     const optionsContainerSudoku = $("#sudoku-values  .options-container");
@@ -1637,6 +1722,8 @@
     });
 
     /*SUDOKU*/
+
+
 
     /*CROSSWORD*/
     const selectedCrossword = $("#crossword-values .selected");
@@ -1657,6 +1744,8 @@
     });
 
     /*CROSSWORD*/
+
+
 
     /*CHESS*/
     const selectedChess = $("#chess-values .selected");
@@ -1686,6 +1775,25 @@
 
     /*CHESS*/
 
+
+
+    /*DISPLAY WORDS*/
+
+    let searchResultSection = $('#search-result')
+
+    //Выделение буквы
+    $(searchResultSection).on('click', '.word-letter', function () {
+
+        $(this).find('.letter').toggleClass('letter-selected');
+    });
+
+    //Подбор новых слов
+    $('#change-display-words').on('click', function () {
+        CreateDisplayWordsArray();
+        ShowDisplayWords();
+    });
+
+    /*DISPLAY WORDS*/
 
     //Выбор слова для кросворда
     //$('#crossword-values').on('click', 'li', function () {

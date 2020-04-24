@@ -39,71 +39,77 @@
 
 
     <section id="words-result-section">
-        <div>
-            <div class="container">
 
+        <div class="container">
+
+            <div class="row col-md-12 d-flex justify-content-center">
+
+                <div>
+                    <h2 class="header-section">СЛОВА</h2>
+                    <hr class="underline" />
+                </div>
+
+            </div>
+
+            <div class="row">
                 <div id="search-result">
 
                 </div>
+            </div>
 
-                <table>
+            <div class="row">
+                <div class="col-12">
+                    <button id="change-display-words" class="common-button">Подобрать слова</button>
+
+                </div>
+                <div class="col-12">
+                    <button class="common-button">Поменять выделение</button>
+
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+
+
+    <section id="fillword-section">
+        <div class="container">
+            <div class="row col-md-12 d-flex justify-content-center">
+
+                <div>
+                    <h2 class="header-section">ФИЛВОРД</h2>
+                    <hr class="underline" />
+                </div>
+
+            </div>
+
+            <div class="row d-flex justify-content-center">
+
+
+
+                <table id="table-fillword">
                     <tbody>
-                        @for (int i = 0; i < 5; i++)
+                        @for (int i = 0; i < 4; i++)
                         {
                             <tr>
-                                @for (int j = 0; j < 16; j++)
+                                @for (int j = 0; j < 7; j++)
                                 {
-                                    <td>*</td>
+                                    <td><span></span></td>
                                 }
                             </tr>
                         }
                     </tbody>
                 </table>
 
+                </
+
+
             </div>
+
         </div>
     </section>
-
-    <table id="table-res">
-        <tbody>
-            <tr>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-            </tr>
-            <tr>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-            </tr>
-            <tr>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-            </tr>
-            <tr>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-                <td><input type="button" value=" " /></td>
-            </tr>
-        </tbody>
-    </table>
 
     <section id="sudoku-section">
         <div class="container">
@@ -224,7 +230,6 @@
         </div>
 
     </section>
-
 
     <section id="chess-section">
 

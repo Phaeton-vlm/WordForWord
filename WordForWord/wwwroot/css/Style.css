@@ -48,13 +48,20 @@ a{
     z-index:2;
 }
 
+#fillword-section {
+    background-color: var(--bg-color-dark);
+    width: 100%;
+    min-height: 380px;
+    position: relative;
+}
+
 #words-result-section > div {
     position: relative;
     height: inherit;
     z-index:20;
 }
 
-#words-result-section > div:before {
+/*#words-result-section > div:before {
     content: '';
     width: 50%;
     height: 600px;
@@ -76,7 +83,60 @@ a{
     top: -170px;
     transform: skewY(-26.8deg);
     z-index:-5;
+}*/
+
+.word-res{
+    display:inline-flex;
+    margin-right:20px;
+    margin-top:20px;
 }
+
+#search-result{
+    margin-bottom:10px;
+    padding-bottom:20px;
+}
+
+.word-letter:last-child {
+    border-right: 2px solid var(--text-color);
+}
+
+
+.word-letter {
+    min-height: 50px;
+    min-width: 50px;
+    border-left: 2px solid var(--text-color);
+    border-bottom: 2px solid var(--text-color);
+    border-top: 2px solid var(--text-color);
+    cursor:pointer;
+}
+
+.word-letter:hover{
+    box-shadow: 0px 0px 11px 9px var(--additional-color);
+    z-index: 1;
+    border-right: 2px solid var(--text-color);
+}
+
+
+
+.letter {
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    font-size: 28px;
+    background-color: var(--bg-color-dark);
+    font-weight: 600;
+}
+
+.letter-selected {
+    background-color: var(--additional-color);
+}
+
+.number {
+    color: var(--text-color);
+    background-color: var(--dark);
+    font-size: 12px;
+}
+
 .div-key-word {
     padding-top: 165px;
     padding-bottom: 70px;
@@ -149,15 +209,77 @@ a{
     transition: height 0.2s ease-in, width 0.8s ease-out;
 }
 
-.submit-button:focus{
+button:focus{
     outline:none;
 }
-/*SUBMIT BUTTON*/
 
+
+
+/*COMMON BUTTON*/
+
+.common-button {
+    display: inline-block;
+    font-size: 18px;
+    width: 250px;
+    height: 30px;
+    background-color: var(--dark);
+    border: none;
+    color: var(--text-color);
+    position: relative;
+    margin-bottom:10px;
+}
+
+.common-button::after {
+    content: '';
+    position: absolute;
+    background-color: var(--additional-color);
+    width: 0px;
+    bottom: 0;
+    right:125px;
+    height: 3px;
+}
+
+.common-button:hover:after {
+    content: '';
+    position: absolute;
+    background-color: var(--additional-color);
+    width: 125px;
+    bottom: 0;
+    right: 125px;
+    height: 3px;
+    transition: width 0.6s ease-out;
+}
+
+.common-button::before {
+    content: '';
+    position: absolute;
+    background-color: var(--additional-color);
+    width: 0px;
+    bottom: 0;
+    left:125px;
+    height: 3px;
+}
+
+.common-button:hover:before {
+    content: '';
+    position: absolute;
+    background-color: var(--additional-color);
+    width: 125px;
+    bottom: 0;
+    left: 125px;
+    height: 3px;
+    transition: width 0.6s ease-out;
+}
+
+/*COMMON BUTTON*/
+
+
+
+/*SUBMIT BUTTON*/
 #words-result-section {
     background-color: var(--bg-color-light);
     width: 100%;
-    min-height: 600px;
+    min-height: 350px;
 }
 
 .header-section{
@@ -188,7 +310,8 @@ a{
 
 table#table-crossword,
 table#table-sudoku,
-table#table-chess {
+table#table-chess,
+table#table-fillword{
     margin-top: 30px;
 }
 
