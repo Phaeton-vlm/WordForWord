@@ -99,12 +99,14 @@ a{
 .word-letter:last-child {
     border-right: 2px solid var(--text-color);
 }
+.word-letter:first-child {
+    border-left: 2px solid var(--text-color);
+}
 
 
 .word-letter {
     min-height: 50px;
     min-width: 50px;
-    border-left: 2px solid var(--text-color);
     border-bottom: 2px solid var(--text-color);
     border-top: 2px solid var(--text-color);
     cursor:pointer;
@@ -113,10 +115,7 @@ a{
 .word-letter:hover{
     box-shadow: 0px 0px 11px 9px var(--additional-color);
     z-index: 1;
-    border-right: 2px solid var(--text-color);
 }
-
-
 
 .letter {
     margin: 0;

@@ -119,8 +119,8 @@
 
         if (InsertData(data)) {
 
-            ShowDisplayWords();
-            //SetFillword();
+            //ShowDisplayWords();
+            CreateListWordsForFillword();
             //CreateListWordsForSudoku();
             //CreateListWordsForCrossword();
             //CreateListWordsForChess();
@@ -161,7 +161,6 @@
 
     //Создание массива всех слов из полученных данных
     function CreateWordsSet(data) {
-
         let WordsSet = []
 
         for (var i = 0; i < data.length; i++) {
@@ -176,9 +175,7 @@
     let currenSymbols = 0;
 
     //Создание массива исппользуемых слов
-    function CreateDisplayWordsArray() {
-
-        
+    function CreateDisplayWordsArray() {   
         DisplayWords = [];
         currenSymbols = 0;
 
@@ -230,9 +227,6 @@
         }
 
         AddOtherWords();
-
-        console.log(Words);
-        console.log(DisplayWords);
 
         return true;
     }
@@ -352,122 +346,246 @@
     /*WORDS DISPLAY--------------------------------------------------------------------------------------*/
 
 
-    var FillWordValues = []
 
-    //Заливка Филворда
-    function SetFillword() {
+    /*FILLWORD DISPLAY-----------------------------------------------------------------------------------*/
 
-        ClearTable('#table-res');
+    let wordsForFillword = [];
+    let fillwordCells = $('#table-fillword tr > td > span')
 
-        FillWordValues = Words.filter(item => item.length <= 7)
+    const FILLWORD_ROWS = 4
+    const FILLWORD_COLUMNS = 7;
+    const MAX_VERTICAL_WORDS = 3;
 
-        //if (FillWordValues.length < 2 || FillWordValues === undefined) {
+    //let fillwordMatrix = [
+    //    ['', '', '', '', '', '', ''],
+    //    ['', '', '', '', '', '', ''],
+    //    ['', '', '', '', '', '', ''],
+    //    ['', '', '', '', '', '', ''],]
 
-        //    FillWordValues = Words.filter(item => item.length >= 4 && item.length <= 7)
+    let fillwordMatrix = [
+        ['', '', '', 'а', 'к', 'р', ''],
+        ['в', '', '', '', '', '', ''],
+        ['к', 'а', 'р', 'т', 'а', '', ''],
+        ['к', '', '', '', '', '', ''],]
+    
+    let fillwordDirection = ['RIGHT', 'DOWN']
+    let hotizontalWords = [];
+    let tempFillwordArray = [];
+    let usedColumns = [];
+    let exeptedColumn = 0;
+    let currentInsertedVerticalWords = 0;
 
-        //}
+    function ResetFillword() {
+        hotizontalWords = [];
+        verticalWords = [];
+        tempFillwordArray = [];
+        currentInsertedVerticalWords = 0;
+        exeptedColumn = 0;
+        ResetUsedColimns();
+        ResetFillwordMatrix();
+    }
 
-        let firstStepValues = FillWordValues.filter(item => item.length >= 5)
+    function CreateListWordsForFillword() {
+        wordsForFillword = [];
+        wordsForFillword = DisplayWords.filter(function (word) {
+            return word.length <= 6;
+        });
+        CreateFillword();
+    }
 
+    function CreateFillword() {
 
+        ResetFillword();
 
+        tempFillwordArray = wordsForFillword.slice();
 
-        if (firstStepValues.length >= 2) {
+        SetHorizontalWords();
+        SetVerticalWords();
 
-            let randomRow
-            let randomArrValue
+        console.log(hotizontalWords);
+        console.log(fillwordMatrix);
+    }
 
-            let temp1 = -1
-            let temp2 = -1
+    function SetHorizontalWords() {
+        Shuffle(tempFillwordArray);
 
-            for (let i = 0; i < 2; i++) {
+        let currentRow = 0;
+        let randomStart = 0;
 
-                randomRow = getRandomInt(4)
-                randomArrValue = getRandomInt(firstStepValues.length)
+        for (let i = 0; i < 2; i++) {
+            hotizontalWords[i] = tempFillwordArray[tempFillwordArray.length - 1 ];
+            tempFillwordArray.splice(tempFillwordArray.length - 1, 1);
+        }
 
-                if (temp1 === randomRow) {
-                    temp1 += 1
+        exeptedColumn = getRandomInt(2);
+        if (exeptedColumn === 1) {
+            exeptedColumn = FILLWORD_COLUMNS - 1;
+        }
 
-                    if (temp1 > 3) {
-
-                        temp1 = 0
-                    }
-                } else {
-
-                    temp1 = randomRow
+        for (let i = 0; i < hotizontalWords.length; i++) {
+            if (exeptedColumn === 0) {
+                randomStart = getRandomInt(FillwordStarPosition(FILLWORD_COLUMNS, hotizontalWords[i]));
+                if (randomStart === 0) {
+                    randomStart++;
                 }
-
-                if (temp2 === randomArrValue) {
-                    temp2 += 1
-
-                    if (temp2 > firstStepValues.length - 1) {
-
-                        temp2 = 0
-                    }
-                } else {
-
-                    temp2 = randomArrValue
+                AddWordToFillword(hotizontalWords[i], randomStart, currentRow, fillwordDirection[0]);
+            }
+            else if (exeptedColumn === 6) {
+                randomStart = getRandomInt(FillwordStarPosition(FILLWORD_COLUMNS, hotizontalWords[i]));
+                if (randomStart + (hotizontalWords[i].length - 1) === 6) {
+                    randomStart--;
                 }
-
-                SetTableRow(temp1, firstStepValues[temp2])
-
+                AddWordToFillword(hotizontalWords[i], randomStart, currentRow, fillwordDirection[0]);
             }
 
+            if (i === 0) {
+                currentRow = getRandomInt(FILLWORD_ROWS);
+                if (currentRow === 0) {
+                    currentRow++;
+                }
+            }        
+        } 
+    }
+
+    function SetVerticalWords() {
+        let tempArrayForVerticalWords = tempFillwordArray.filter(function (word) {
+            return word.length <= FILLWORD_ROWS;
+        });
+
+        for (let i = 0; i < tempArrayForVerticalWords.length; i++) {
+            InsertVerticalWord(tempArrayForVerticalWords[i]);
+            if (currentInsertedVerticalWords === MAX_VERTICAL_WORDS) {
+                break;
+            }
+        }
+    }
+
+
+    function InsertVerticalWord(word) {
+        let column = [];
+        let result;
+        let appropriateWord = '';
+
+        for (let z = 0; z < FILLWORD_COLUMNS; z++) {
+            if (usedColumns[z]) {
+                continue;
+            }
+
+            column = [];
+
+            for (let i = 0; i < FILLWORD_ROWS; i++) {
+                column[i] = fillwordMatrix[i][z];
+            }
+
+            result = CheckForEmptySpace(column);
+
+            if (result === 0) {
+                AddWordToFillword(word, z, getRandomInt(FillwordStarPosition(FILLWORD_ROWS, word)), fillwordDirection[1]);
+                usedColumns[z] = true;
+                currentInsertedVerticalWords++;
+                return true;
+            }
+            else if (result === -1) {
+                appropriateWord = CheckingForAppropriateWord(word, column)
+                if (appropriateWord !== '') {
+                    AddWordToFillword(appropriateWord[0], z, appropriateWord[1], fillwordDirection[1]);
+                    usedColumns[z] = true;
+                    currentInsertedVerticalWords++;
+                    return true;
+                }
+
+            }
+        }
+        return false;    
+    }
+
+    function CheckingForAppropriateWord(word, column) {
+        let shift = FillwordStarPosition(FILLWORD_ROWS, word);
+        let currentShift = -1;
+
+        let hits = 0;
+        let isHere = false;
+
+        for (let i = 0; i <= shift; i++) {
+            hits = 0;
+            currentShift++;
+            for (let j = i, s = 0; s < word.length; j++, s++) {
+
+                if (column[j] === word[s] || column[j] === '') {
+                    hits++;
+                    continue;
+                }
+                if ((FILLWORD_ROWS - (word.length + i)) > 0) {
+                    break;
+                }
+                return '';
+            }
+
+            if (hits >= word.length) {
+                isHere = true;
+                break;
+            }
 
         }
 
-        console.log(FillWordValues)
-
-        console.log("конец SetFillword")
-
-    }
-
-    //Очистка таблицы от значений
-    function ClearTable(table) {
-
-        $(table + ' tr > td > input').each(function (indx, element) {
-            $(this).attr("value", ' ')
-        });
-    }
-
-    //Запись слова в строку
-    function SetTableRow(row, word) {
-
-        let randomVal
-
-        switch (word.length) {
-
-            case 5: {
-                randomVal = getRandomInt(3);
-                break;
-            }
-            case 6: {
-                randomVal = getRandomInt(2);
-                break;
-            }
-            case 7: {
-                randomVal = 0;
-                break;
-            }
-
+        if (!isHere) {
+            return '';
         }
 
-        let i = 0;
-
-        $('#table-res tr:eq(' + row + ') > td > input').each(function (indx, element) {
-
-            if (i == word.length) {
-                return;
-            }
-
-            if (indx >= randomVal) {
-                $(this).attr("value", word[i]);
-                i++
-
-            }
-        });
-
+        return [word, currentShift];
     }
+
+    function CheckForEmptySpace(array) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i] !== '') {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    function FillwordStarPosition(excludingValue,word) {
+        return excludingValue - word.length;
+    }
+
+    function ResetFillwordMatrix() {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 7; j++) {
+                fillwordMatrix[i][j] = '';
+            }
+        }
+    }
+
+    function ResetUsedColimns() {
+        usedColumns = [];
+        for (let i = 0; i < FILLWORD_COLUMNS; i++) {
+            usedColumns[i] = false;
+        }
+    }
+
+    function AddWordToFillword(word, startX, startY, direction) {
+
+        if (direction === fillwordDirection[0]) {
+            for (let i = 0; i < word.length; i++) {
+
+                fillwordMatrix[startY][startX] = word[i];
+                startX++;
+            }
+        }
+
+        if (direction === fillwordDirection[1]) {
+            for (let i = 0; i < word.length; i++) {
+                fillwordMatrix[startY][startX] = word[i];
+                startY++;
+            }
+        }
+        
+    }
+
+
+    /*FILLWORD DISPLAY-----------------------------------------------------------------------------------*/
+
+
 
     /*SUDOKU START---------------------------------------------------------------------------------------*/
 
