@@ -5,206 +5,196 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
+    <div class="text-center">
 
-    <section id="search-section">
+        <section class="main-header">
+            <div class="container" style="height:inherit">
+                <div class="row" style="height:inherit">
+                    <div class="col-md-4 col-sm-12 d-flex justify-content-center align-items-center">
+                        <span class="header-text">Слово в слове</span>
+                    </div>
+                    <div class="col-md-8 col-sm-12 d-flex justify-content-end" style="height:inherit">
+                        <div class="header-menu">
+                            <div class="header-menu-item">
+                                <span>Справка</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div>
+        </section>
+
+        @*Секция для поиска слов по ключевому слову*@
+        <section id="search-section">
+
+            <div>
+                <div class="container">
+
+                    <div class="div-key-word" id="key-word">
+                    </div>
+
+                    <form id="get-words-form" name="get-word-form" method="get">
+
+                        <div>
+                            <div class="input-kw">
+                                <input maxlength="15" id="get-keyword" type="text" placeholder="Введите слово" />
+                                <hr class="underline" />
+                            </div>
+
+                            <button class="submit-button" id="submit" type="submit">Поиск</button>
+
+
+                            <div class="keyword-error">
+                                <h4 class="keyword-error-header">Ошибка</h4>
+                                <div id="keyword-error-descr">фы ывпыфвп ывпыsa sdfasg sag asdg ag sd g sag sa dg sad gagasdgasdg  впвы пвыф пвы пвыфп вы </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </section>
+
+        @*Секция для вывода подобранных слов*@
+        <section id="words-result-section" class="invisibl-section">
+
+            <div class="container-fluid bg-section-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <h2 class="header-section">СЛОВА</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="container">
 
-                <div class="div-key-word">
-                    <div>
-                        <h1 class="key-word">КАРТИНА</h1>
-                        <hr class="underline" />
+                <div class="row">
+                    <div id="search-result">
+
                     </div>
                 </div>
 
-                <form id="get-words-form" name="get-word-form" method="get">
+                <div class="row">
+                    <div class="col-12">
+                        <button id="change-display-words" class="common-button">Подобрать слова</button>
 
-                    <div>
-                        <input maxlength="15" id="get-keyword" type="text" placeholder="Введите слово" />
-                        <button class="submit-button" id="submit" type="submit">Искать</button>
+                    </div>
+                </div>
+            </div>
 
+        </section>
 
+        @*Секция для филворда*@
+        <section id="fillword-section" class="invisibl-section">
+            <div class="container-fluid bg-section-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <h2 class="header-section">ФИЛВОРД</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row d-flex justify-content-center">
 
-                        <h5 id="input-Keyword-error" style="color:red"></h5>
+                    <div col-md-4>
+                        <div class="fillword-info">
+                            <div class="fillword-info-section">
+                                <h5 class="fillword-info-section-header">Вертикальные слова</h5>
+                                <hr class="fillword-separator" />
+                                <ul id="vertical-fillword-words" class="fillword-info-list">
+                                </ul>
+                            </div>
+                            <div class="fillword-info-section">
+                                <h5 class="fillword-info-section-header">Горизонтальные слова</h5>
+                                <hr class="fillword-separator" />
+                                <ul id="horizontal-fillword-words" class="fillword-info-list">
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                </form>
-
-            </div>
-        </div>
-
-    </section>
-
-
-    <section id="words-result-section">
-
-        <div class="container">
-
-            <div class="row col-md-12 d-flex justify-content-center">
-
-                <div>
-                    <h2 class="header-section">СЛОВА</h2>
-                    <hr class="underline" />
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div id="search-result">
-
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <button id="change-display-words" class="common-button">Подобрать слова</button>
-
-                </div>
-                <div class="col-12">
-                    <button class="common-button">Поменять выделение</button>
-
-                </div>
-
-            </div>
-        </div>
-
-    </section>
-
-
-
-    <section id="fillword-section">
-        <div class="container">
-            <div class="row col-md-12 d-flex justify-content-center">
-
-                <div>
-                    <h2 class="header-section">ФИЛВОРД</h2>
-                    <hr class="underline" />
-                </div>
-
-            </div>
-
-            <div class="row d-flex justify-content-center">
-
-
-
-                <table id="table-fillword">
-                    <tbody>
-                        @for (int i = 0; i < 4; i++)
-                        {
-                            <tr>
-                                @for (int j = 0; j < 7; j++)
+                    <div col-md-8>
+                        <table id="table-fillword">
+                            <tbody>
+                                @for (int i = 0; i < 4; i++)
                                 {
-                                    <td><span></span></td>
+                                    <tr>
+                                        @for (int j = 0; j < 7; j++)
+                                        {
+                                            <td><span></span></td>
+                                        }
+                                    </tr>
                                 }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                
+                            </tbody>
+                        </table>
+                    </div>
 
 
-            </div>
 
-        </div>
-    </section>
 
-    <section id="sudoku-section">
-        <div class="container">
-            <div class="row col-md-12 d-flex justify-content-center">
-
-                <div>
-                    <h2 class="header-section">СУДОКУ</h2>
-                    <hr class="underline" />
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-6 col-sm-12 d-flex justify-content-center">
-
-                    <table id="table-sudoku">
-                        <tbody>
-                            @for (int i = 0; i < 4; i++)
-                            {
-                                <tr>
-                                    @for (int j = 0; j < 4; j++)
-                                    {
-                                        <td><span>d</span></td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
 
                 </div>
 
-                <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
-                    <div class="row">
-                        <h4 class="list-header">Выберите слово:</h4>
+                <div class="row">
 
-                        <div id="sudoku-values" class="select-box">
-
-                            <div class="options-container">
-
-                            </div>
-
-                            <div class="selected">
-                                Нет значений
-                            </div>
-
-                        </div>
+                    <div class="col-12">
+                        <button id="update-fillword" class="common-button">Пересобрать филворд</button>
 
                     </div>
 
                 </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="crossword-section">
-
-        <div class="container">
-            <div class="row col-md-12 d-flex justify-content-center">
-
-                <div>
-                    <h2 class="header-section">КРОССВОРД</h2>
-                    <hr class="underline" />
-                </div>
 
             </div>
+        </section>
 
-            <div class="row">
+        @*Секция для судоку*@
+        <section id="sudoku-section" class="invisibl-section">
 
-                <div class="col-md-6 col-sm-12 d-flex justify-content-center">
-
-                    <table id="table-crossword">
-                        <tbody>
-                            @for (int i = 0; i < 8; i++)
-                            {
-                                <tr>
-                                    @for (int j = 0; j < 7; j++)
-                                    {
-                                        <td><span></span></td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+            <div class="container-fluid bg-section-header">
+                <div class="container">
                     <div class="row">
-                        <h4 class="list-header">Выберите слово:</h4>
-                        <div class="row col-md-12">
+                        <div class="col-12 d-flex justify-content-start">
+                            <h2 class="header-section">СУДОКУ</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
 
 
-                            <div id="crossword-values" class="select-box">
+                <div class="row">
+
+                    <div class="col-md-6 col-sm-12 d-flex justify-content-center">
+
+                        <table id="table-sudoku">
+                            <tbody>
+                                @for (int i = 0; i < 4; i++)
+                                {
+                                    <tr>
+                                        @for (int j = 0; j < 4; j++)
+                                        {
+                                            <td><span></span></td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+                        <div class="row">
+                            <h4 class="list-header">Выберите слово:</h4>
+
+                            <div id="sudoku-values" class="select-box">
 
                                 <div class="options-container">
 
@@ -216,90 +206,71 @@
 
                             </div>
 
-                            <div id="crossword-repeat-btn" class="repeat-btn">
-                                <i class="fas fa-redo fa-lg"></i>
-                            </div>
-
                         </div>
 
                     </div>
                 </div>
 
             </div>
+        </section>
 
-        </div>
-
-    </section>
-
-    <section id="chess-section">
-
-        <div class="container">
-            <div class="row col-md-12 d-flex justify-content-center">
-
-                <div>
-                    <h2 class="header-section">ШАХМАТЫ</h2>
-                    <hr class="underline" />
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-6 col-sm-12 d-flex justify-content-center">
-
-                    <table id="table-chess">
-                        <tbody>
-                            @for (int i = 0; i < 8; i++)
-                            {
-                                <tr>
-                                    @for (int j = 0; j < 8; j++)
-                                    {
-                                        <td><span></span></td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
-
+        @*Секция для кроссворда*@
+        <section id="crossword-section" class="invisibl-section">
+            <div class="container-fluid bg-section-header">
+                <div class="container">
                     <div class="row">
-                        <h4 class="list-header">Выберите фигуру:</h4>
-                        <div class="row col-md-12">
-
-                            <div id="rook" class="chess-figure">
-                                <i class="fas fa-chess-rook fa-lg"></i>
-                            </div>
-
-                            <div id="bishop" class="chess-figure">
-                                <i class="fas fa-chess-bishop fa-lg"></i>
-                            </div>
-
+                        <div class="col-12 d-flex justify-content-start">
+                            <h2 class="header-section">КРОССВОРД</h2>
                         </div>
                     </div>
-                    <div class="row">
-                        <h4 class="list-header">Выберите слово:</h4>
-                        <div class="row col-md-12">
+                </div>
+            </div>
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-md-6 col-sm-12 d-flex justify-content-center">
+
+                        <table id="table-crossword">
+                            <tbody>
+                                @for (int i = 0; i < 8; i++)
+                                {
+                                    <tr>
+                                        @for (int j = 0; j < 7; j++)
+                                        {
+                                            <td class="crossword-td"><span></span></td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+                        <div class="row">
+                            <h4 class="list-header">Выберите слово:</h4>
+                            <div class="row col-md-12">
 
 
-                            <div id="chess-values" class="select-box">
+                                <div id="crossword-values" class="select-box">
 
-                                <div class="options-container">
+                                    <div class="options-container">
+
+                                    </div>
+
+                                    <div class="selected">
+                                        Нет значений
+                                    </div>
 
                                 </div>
 
-                                <div class="selected">
-                                    Нет значений
+                                <div id="crossword-repeat-btn" class="repeat-btn">
+                                    <i class="fas fa-redo fa-lg"></i>
                                 </div>
 
                             </div>
 
-                            <div id="chess-repeat-btn" class="repeat-btn">
-                                <i class="fas fa-redo fa-lg"></i>
-                            </div>
-
                         </div>
                     </div>
 
@@ -307,14 +278,92 @@
 
             </div>
 
-        </div>
+        </section>
+
+        @*Секция для "Шахмат"*@
+        <section id="chess-section" class="invisibl-section">
+            <div class="container-fluid bg-section-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                            <h2 class="header-section">ШАХМАТЫ</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-6 col-sm-12 d-flex justify-content-center">
+
+                        <table id="table-chess">
+                            <tbody>
+                                @for (int i = 0; i < 8; i++)
+                                {
+                                    <tr>
+                                        @for (int j = 0; j < 8; j++)
+                                        {
+                                            <td><span></span></td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="col-md-6 col-sm-12  d-flex justify-content-start flex-column">
+
+                        <div class="row">
+                            <h4 class="list-header">Выберите фигуру:</h4>
+                            <div class="row col-md-12">
+
+                                <div id="rook" class="chess-figure">
+                                    <i class="fas fa-chess-rook fa-lg"></i>
+                                </div>
+
+                                <div id="bishop" class="chess-figure">
+                                    <i class="fas fa-chess-bishop fa-lg"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4 class="list-header">Выберите слово:</h4>
+                            <div class="row col-md-12">
+
+
+                                <div id="chess-values" class="select-box">
+
+                                    <div class="options-container">
+
+                                    </div>
+
+                                    <div class="selected">
+                                        Нет значений
+                                    </div>
+
+                                </div>
+
+                                <div id="chess-repeat-btn" class="repeat-btn">
+                                    <i class="fas fa-redo fa-lg"></i>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
 
 
-    </section>
+        </section>
 
-</div>
+    </div>
 
 @section Scripts {
 

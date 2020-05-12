@@ -4,10 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] | WordForWord</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     @*<link rel="stylesheet" href="~/css/site.css" />*@
-    <link rel="stylesheet" href="~/css/Style.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Style.css" asp-append-version="true" />
 </head>
 <body>
     @*<header>
@@ -34,6 +36,13 @@
 
     <div class="container-fluid">
         <main role="main">
+
+            <div id="loading-container" class="container-fluid-loading">
+                <div class="d-flex justify-content-center">
+                    <div id="loading" class="rotate-shadows"></div>
+                </div>
+            </div>
+
             @RenderBody()
         </main>
     </div>

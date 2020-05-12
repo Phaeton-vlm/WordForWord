@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="ViewComponents\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 
