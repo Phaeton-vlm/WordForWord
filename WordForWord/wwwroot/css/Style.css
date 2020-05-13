@@ -77,11 +77,9 @@ table td > span {
     text-transform: uppercase;
 }
 
-
-
-/*.invisibl-section{
-    display:none;
-}*/
+.invisibl-section {
+    display: none;
+}
 
 .bg-section-header {
     background-color: #2d3436;
@@ -292,16 +290,21 @@ table td > span {
     margin-top: 5px;
 }
 
-.keyword-error{
-    display:inline-flex;
-    width:350px;
-    flex-direction:column;
-    margin-top:10px;
+#chess-error-box.keyword-error {
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+}
+
+.keyword-error {
+    display: none;
+    width: 350px;
+    flex-direction: column;
+    margin-top: 10px;
     border: 2px solid var(--additional-color);
     background-color: rgba(100, 69, 69, 0.50);
     color: var(--additional-color);
-    max-height:150px;
-    overflow:hidden;
+    max-height: 150px;
+    overflow: hidden;
 }
 
 #get-keyword {
@@ -339,26 +342,12 @@ table td > span {
     margin-top: 20px;
 }
 
-/*.submit-button::after{
-    content: '';
-    position: absolute;
-    background-color: var(--additional-color);
-    width: 5px;
-    bottom: 0;
-    right: 0;
-    height: 50px;
+.submit-button:hover{
+    color: var(--dark);
+    background-color: var(--text-color);
+    transition: all ease-in 0.3s;
+    font-weight:400;
 }
-
-.submit-button:hover:after{
-    content: '';
-    position: absolute;
-    background-color: var(--additional-color);
-    width: 180px;
-    bottom: 0;
-    right: 0;
-    height: 5px;
-    transition: height 0.2s ease-in, width 0.8s ease-out;
-}*/
 
 button:focus{
     outline:none;
@@ -477,19 +466,19 @@ table#table-fillword {
 
 
 table#table-crossword tr > td:nth-of-type(4) {
-    /*border: 3px solid var(--additional-color);*/
     background-color: var(--additional-color);
-    /*border-color: var(--additional-color);*/
 }
 
 table#table-crossword tr > td:nth-of-type(3) {
     border-right-color: var(--additional-color);
-   
 }
 
 .tdInactive {
     visibility: collapse;
 }
+
+
+
 /*SELECT LIST*/
 .select-box {
     display: flex;

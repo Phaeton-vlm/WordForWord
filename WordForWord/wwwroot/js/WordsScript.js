@@ -10,19 +10,29 @@
     const MIN_KEYWORD_LENGTH = 4;
 
 
-    function ResetAll() {
-
-        //Очистка поля со словами
+    function ResetAll() {       
         ResetShowDisplayWordsSection();
-
+        ResetErrorBoxes();
     }
 
+    //Очистка поля со словами
     function ResetShowDisplayWordsSection() {
         searchResult.empty();
     }
 
+    //Сброс окон с ошибками
+    function ResetErrorBoxes() {
+        for (let i = 0; i < errorBoxes.length; i++) {
+            errorBoxes[i].css('display', 'none');
+        }
+    }
 
-    let keywordPlace = $('#key-word');
+
+    const keywordPlace = $('#key-word');
+    const errorBoxes = [
+        $('#search-error-box'),
+        $('#chess-error-box'),
+    ]
     //Поиск слов по ключевому слову
     $('#get-words-form').submit(function () {
 
@@ -40,6 +50,8 @@
         AddKeywordToView();
 
         StartLoading();
+
+        
 
         $.ajax({
             type: 'GET',
@@ -77,13 +89,20 @@
     }
 
     let loading = $('.container-fluid-loading');
+    let sections = $('.invisibl-section');
+
     //Начало загрузки
-    function StartLoading() {
+    function StartLoading() {     
         loading.css('display', 'block');
     }
 
     //Конец загрузки
-    function EndLoading() {
+    function EndLoading(isSuccessful) {
+        if (isSuccessful) {
+            if (sections.css('display') === 'none') {
+                sections.css('display', 'block');
+            }
+        }
         loading.css('display', 'none');
     }
 
@@ -119,7 +138,7 @@
     function CheckMinKeyWordLength() {
 
         if (Keyword.length < MIN_KEYWORD_LENGTH) {
-            $('#input-Keyword-error').text("Минимум 4 буквы")
+            SetError(errorBoxes[0], 'Минимальная длина слова 4 буквы.');
             return false;
         }
 
@@ -148,23 +167,21 @@
 
     //Действия после получения набора слов из базы данных
     function AfterGettingResults(data) {
+        let isSuccessful = false;
 
         if (InsertData(data)) {
-
             ShowDisplayWords();
             CreateListWordsForFillword();
             CreateListWordsForSudoku();
             CreateListWordsForCrossword();
             CreateListWordsForChess();
-            //console.log("конец AfterGettingResults")
-
+            isSuccessful = true;
         }
         else {
-
-            console.log("Ошибка")
+            SetError(errorBoxes[0], 'Не удалось собрать результаты для введенного слова, введите другое слово.');
         }
 
-        EndLoading();
+        EndLoading(isSuccessful);
     }
 
 
@@ -1869,6 +1886,16 @@
 
 
 
+    /*WORD START-----------------------------------------------------------------------------------------*/
+
+    $('#create-docx-form').submit(function () {
+        window.open(window.location.pathname + '?handler=CreateDocx');
+        return false;
+    })
+
+    /*WORD END-------------------------------------------------------------------------------------------*/
+
+
 
     //Получение рандомного числа
     function getRandomInt(max) {
@@ -1883,6 +1910,12 @@
         }
     }
 
+    function SetError(errorBox, message = '') {
+        if (message !== '') {
+            errorBox.find('div').text(message);
+        }
+        errorBox.css('display', 'inline-flex');
+    }
 
     /*EVENTS---------------------------------------------------------------------------------------------*/
 
