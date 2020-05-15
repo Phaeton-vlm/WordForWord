@@ -411,6 +411,12 @@
         ['', '', '', '', '', '', ''],
         ['', '', '', '', '', '', ''],]
 
+    let fillwordMatrixCopy = [
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],]
+
     
     let fillwordDirection = ['RIGHT', 'DOWN']
     let hotizontalWords = [];
@@ -445,15 +451,23 @@
         ResetFillword();
 
         tempFillwordArray = wordsForFillword.slice();
+        
 
         SetHorizontalWords();
         SetVerticalWords();
+
+        for (let i = 0; i < fillwordMatrix.length; i++) {
+            for (let j = 0; j < fillwordMatrix[i].length; j++) {
+                fillwordMatrixCopy[i][j] = fillwordMatrix[i][j];
+            }
+        }
+
         FillEmptyValue();
         BringOutToView();
         DisplaySelectedWords();
 
-        console.log(hotizontalWords);
-        console.log(verticalWords);
+        console.log('copy');
+        console.log(fillwordMatrixCopy);
     }
 
     //Вставка горизонтальных слов
@@ -609,6 +623,7 @@
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 7; j++) {
                 fillwordMatrix[i][j] = '';
+                fillwordMatrixCopy[i][j] = '';
             }
         }
     }
@@ -703,6 +718,7 @@
     /*SUDOKU START---------------------------------------------------------------------------------------*/
 
     let WordsForSudoku = []
+    let sudokuMatrix = []
     let sudokuList = $('#sudoku-values .options-container:eq(0)');
     let tableSudoku = $('#table-sudoku tr > td > span');
 
@@ -726,6 +742,7 @@
 
     //Очистка значений таблицы судоку
     function ClearSudokuTable() {
+        sudokuMatrix = [];        
         for (let i = 0; i < tableSudoku.length; i++) {
             tableSudoku[i].innerText = '';
         }
@@ -742,10 +759,10 @@
 
         let valueArr = value.split('');
 
-        tableSudoku[0].innerText = valueArr[0];
-        tableSudoku[5].innerText = valueArr[0];
-        tableSudoku[10].innerText = valueArr[1];
-        tableSudoku[15].innerText = valueArr[2];
+        tableSudoku[0].innerText  = valueArr[0];
+        tableSudoku[5].innerText  = valueArr[0];
+        tableSudoku[10].innerText  = valueArr[1];
+        tableSudoku[15].innerText  = valueArr[2];
         tableSudoku[12].innerText = valueArr[3];
 
         let curRowValues = []
@@ -798,6 +815,10 @@
 
             currentRow++;
         }
+
+        for (let i = 0; i < tableSudoku.length; i++) {
+            sudokuMatrix[i] = tableSudoku[i].innerText.toLowerCase();
+        }
     }
 
     /*SUDOKU END-----------------------------------------------------------------------------------------*/
@@ -827,7 +848,7 @@
             crosswordList.append('<div class="option"><input type="radio" class="radio"  id="' + WordsForCrossword[i] + '" name="sudokuItem" /> <label for=' + WordsForCrossword[i] + '>' + WordsForCrossword[i] + '</label> </div >');
         }
 
-        CreateCrossword(WordsForCrossword[0]);
+        CreateCrossword(WordsForCrossword[0])
 
         return false;
     }
@@ -836,8 +857,11 @@
     let tableCrosswordTd = $('#table-crossword tr > td');
     let tableCurrentPosition = 0;
 
+    let crosswordMatrix = [];
+
     //Создание кроссворда
     function CreateCrossword(secretWord) {
+        crosswordMatrix = []
         tableCurrentPosition = 0;
         selectedCrossword.text(secretWord);
 
@@ -859,6 +883,14 @@
             if (i == (secretWord.length - 1) && i != 6) {
                 HideRemainingCells(i)
             }
+        }
+
+        for (let i = 0; i < tableCrossword.length; i++) {
+            if (tableCrossword[i].innerText === '') {
+                crosswordMatrix[i] = '0';
+                continue;
+            }
+            crosswordMatrix[i] = tableCrossword[i].innerText.toLowerCase();
         }
 
         return true;
@@ -958,11 +990,22 @@
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],]
 
+    let ChessMatrixExport = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],]
+
     //Сброс матрицы
     function ResetChessMatrix() {
         for (var i = 0; i < ChessMatrix.length; i++) {
             for (var j = 0; j < ChessMatrix[i].length; j++) {
                 ChessMatrix[i][j] = 0;
+                ChessMatrixExport[i][j] = 0;
             }
         }
     }
@@ -1029,9 +1072,10 @@
         }
     }
 
+    let chessWord = '';
     //Создание шахмат
     function CreateChess(word, figure) {
-
+        chessWord = word;
 
         if (CURRENT_FIGURE != figure) {
 
@@ -1084,6 +1128,7 @@
         }
 
         ChessMatrix[figureY][figureX] = -5;
+        ChessMatrixExport[figureY][figureX] = 'B';
         tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = '<i class="fas fa-chess-bishop fa-lg"></i>';
 
 
@@ -1235,6 +1280,7 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                ChessMatrixExport[figureY][figureX] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
 
 
@@ -1262,6 +1308,7 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                ChessMatrixExport[figureY][figureX] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
 
 
@@ -1289,6 +1336,7 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                ChessMatrixExport[figureY][figureX] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
 
 
@@ -1316,6 +1364,7 @@
                 figureX = shift[1]
 
                 ChessMatrix[figureY][figureX] = -5;
+                ChessMatrixExport[figureY][figureX] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = letter;
 
 
@@ -1553,6 +1602,7 @@
         let lastY = figureY;
 
         ChessMatrix[figureY][figureX] = -5;
+        ChessMatrixExport[figureY][figureX] = "R";
         tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, figureY)].innerHTML = '<i class="fas fa-chess-rook fa-lg"></i>';
 
         let letter;
@@ -1618,6 +1668,7 @@
                 }
 
                 ChessMatrix[figureY][shift] = -5;
+                ChessMatrixExport[figureY][shift] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(shift, figureY)].innerText = letter;
 
                 Rook_FillRowOrColum('X')
@@ -1642,6 +1693,7 @@
                 }
 
                 ChessMatrix[figureY][shift] = -5;
+                ChessMatrixExport[figureY][shift] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(shift, figureY)].innerText = letter;
 
                 Rook_FillRowOrColum('X')
@@ -1666,6 +1718,7 @@
                 }
 
                 ChessMatrix[shift][figureX] = -5;
+                ChessMatrixExport[shift][figureX] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, shift)].innerText = letter;
 
                 Rook_FillRowOrColum('Y')
@@ -1690,6 +1743,7 @@
                 }
 
                 ChessMatrix[shift][figureX] = -5;
+                ChessMatrixExport[shift][figureX] = letter;
                 tableChessTd[TwoDimensionalArrayIndexToOneDimensional(figureX, shift)].innerText = letter;
 
                 Rook_FillRowOrColum('Y')
@@ -1889,9 +1943,64 @@
     /*WORD START-----------------------------------------------------------------------------------------*/
 
     $('#create-docx-form').submit(function () {
-        window.open(window.location.pathname + '?handler=CreateDocx');
+
+        let fillwordString = FillwordMatrixCopyToString();
+        let sudokuString = SudokuMatrixToString();
+        let crosswordString = CrosswordMatrixToString();
+        let chessString = ChessMatrixToString();
+        let words = DisplayWordsToString();
+
+        window.open(window.location.pathname + '?handler=CreateDocx&keyword=' + Keyword + '&words=' + words + '&fillwordString=' + fillwordString + '&sudokuString=' + sudokuString + '&crosswordString=' + crosswordString + '&chessString=' + chessString + '&chessWord=' + chessWord );
         return false;
     })
+
+    function FillwordMatrixCopyToString() {
+        let str = '';
+        for (let i = 0; i < fillwordMatrixCopy.length; i++) {
+            for (let j = 0; j < fillwordMatrixCopy[i].length; j++) {
+                if (fillwordMatrixCopy[i][j] === '') {
+                    str += '0';
+                    continue;
+                }
+                str += fillwordMatrixCopy[i][j];
+            }
+        }
+        return str;
+    }
+
+    function SudokuMatrixToString() {
+        let str = '';
+        for (let i = 0; i < sudokuMatrix.length; i++) {
+            str += sudokuMatrix[i];
+        }
+        return str;
+    }
+
+    function CrosswordMatrixToString() {
+        let str = '';
+        for (let i = 0; i < crosswordMatrix.length; i++) {
+            str += crosswordMatrix[i];
+        }
+        return str;
+    }
+
+    function ChessMatrixToString() {
+        let str = '';
+        for (let i = 0; i < ChessMatrixExport.length; i++) {
+            for (let j = 0; j < ChessMatrixExport[i].length; j++) {
+                str += ChessMatrixExport[i][j].toString();
+            }           
+        }
+        return str;
+    }
+
+    function DisplayWordsToString() {
+        let str = '';
+        for (let i = 0; i < DisplayWords.length; i++) {
+            str += DisplayWords[i] + '0';
+        }
+        return str;
+    }
 
     /*WORD END-------------------------------------------------------------------------------------------*/
 

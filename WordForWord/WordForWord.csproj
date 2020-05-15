@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Icons\bishop.png" />
+    <Content Include="Icons\rook.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DocXCore" Version="1.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
@@ -20,6 +25,7 @@
     <Folder Include="ViewComponents\" />
     <Folder Include="wwwroot\img\" />
     <Folder Include="Files\" />
+    <Folder Include="Icons\" />
   </ItemGroup>
 
 
