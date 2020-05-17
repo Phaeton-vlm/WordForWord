@@ -45,11 +45,12 @@ namespace WordForWord.Pages
             return new JsonResult(Words);
         }
 
-        public FileResult OnGetCreateDocx(string keyword,string words, string fillwordString, string sudokuString, string crosswordString, string chessString, string chessWord)
+        public FileResult OnGetCreateDocx(string keyword,string words,string wordsForStudent, string fillwordString, string fillwordFullString, string sudokuString, string crosswordString, string chessString, string chessWord)
         {
 
             List<char> lettersArray = new List<char>(keyword.Length);
             List<string> wordsArray = CreateWordList(words);
+            List<string> wordsArrayForStudent = CreateWordList(wordsForStudent);
 
             for (int i = 0; i < keyword.Length; i++)
             {
@@ -63,7 +64,7 @@ namespace WordForWord.Pages
 
             
             System.Drawing.Image imgForTeacher = PageForTeacher(keyword, wordsArray, lettersArray, fillwordString, sudokuString, crosswordString, chessString, chessWord);
-            System.Drawing.Image imgForStudent = PageForStudent(keyword, lettersArray, sudokuString, crosswordString, chessString, chessWord);
+            System.Drawing.Image imgForStudent = PageForStudent(keyword, wordsArrayForStudent, lettersArray, fillwordFullString, sudokuString, crosswordString, chessString, chessWord);
 
             Stream imageTeacherStream = new MemoryStream();
             Stream imageStudentStream = new MemoryStream();
@@ -268,7 +269,7 @@ namespace WordForWord.Pages
             return image;
         }
 
-        private System.Drawing.Image PageForStudent(string keyword, List<char> lettersArray, string sudokuString,string crosswordString,string chessString, string chessWord)
+        private System.Drawing.Image PageForStudent(string keyword, List<string> wordsArrayForStudent, List<char> lettersArray, string fillwordFullString, string sudokuString,string crosswordString,string chessString, string chessWord)
         {
             Bitmap template = new Bitmap(2480, 3508);
             System.Drawing.Image image = template;
@@ -295,6 +296,57 @@ namespace WordForWord.Pages
             graphics.DrawRectangle(PaintingSet.GrayPen, 125, 140, (80 + currentPosition - spacing - letterlength), 180);
             graphics.DrawRectangle(PaintingSet.GrayPen, 125, 320, (80 + currentPosition - spacing - letterlength), 80);
             //Вывод ключевого слова: END
+
+            int currentRow = 0;
+            int currentCell = 0;
+            int remainingСells = MAX_ROW_COUNT;
+
+            //Вывод слов: START
+            for (int i = 0; i < wordsArrayForStudent.Count; i++)
+            {
+                remainingСells -= (wordsArrayForStudent[i].Length/2) + 1;
+                if (remainingСells < 0)
+                {
+                    remainingСells = MAX_ROW_COUNT;
+                    currentRow++;
+                    currentCell = 0;
+                }
+
+                for (int j = 0; j < wordsArrayForStudent[i].Length - 1; j+=2)
+                {
+                    graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * currentCell), 500 + (150 * currentRow), 130, 130);
+                    graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * currentCell) + 1, 500 + (150 * currentRow), 128, 30);
+
+                    if (wordsArrayForStudent[i][j + 1].ToString() == 1.ToString())
+                    {
+                        graphics.DrawString("?", PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
+
+                    }
+                    else
+                    {
+                        graphics.DrawString((lettersArray.FindIndex(0, x => x == wordsArrayForStudent[i][j]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
+
+                    }
+
+                    currentCell++;
+                }
+
+                currentCell++;
+            }
+            //Вывод слов: END
+
+            //Вывод филворда: START
+            graphics.DrawString("Филворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 1450);
+            for (int i = 0, z = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 1550 + (130 * i), 130, 130);
+                    graphics.DrawString(fillwordFullString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 1550 + (130 * i));                
+                    z++;
+                }
+            }
+            //Вывод филворда: END
 
             //Вывод судоку: START
             graphics.DrawString("Судоку", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 1450);

@@ -1945,12 +1945,14 @@
     $('#create-docx-form').submit(function () {
 
         let fillwordString = FillwordMatrixCopyToString();
+        let fillwordFullString = FillwordMatrixFullToString();
         let sudokuString = SudokuMatrixToString();
         let crosswordString = CrosswordMatrixToString();
         let chessString = ChessMatrixToString();
         let words = DisplayWordsToString();
+        let wordsForStudent = DisplayWordsToStringLong();
 
-        window.open(window.location.pathname + '?handler=CreateDocx&keyword=' + Keyword + '&words=' + words + '&fillwordString=' + fillwordString + '&sudokuString=' + sudokuString + '&crosswordString=' + crosswordString + '&chessString=' + chessString + '&chessWord=' + chessWord );
+        window.open(window.location.pathname + '?handler=CreateDocx&keyword=' + Keyword + '&words=' + words + '&wordsForStudent=' + wordsForStudent + '&fillwordString=' + fillwordString + '&fillwordFullString=' + fillwordFullString + '&sudokuString=' + sudokuString + '&crosswordString=' + crosswordString + '&chessString=' + chessString + '&chessWord=' + chessWord );
         return false;
     })
 
@@ -1963,6 +1965,16 @@
                     continue;
                 }
                 str += fillwordMatrixCopy[i][j];
+            }
+        }
+        return str;
+    }
+
+    function FillwordMatrixFullToString() {
+        let str = '';
+        for (let i = 0; i < fillwordMatrix.length; i++) {
+            for (let j = 0; j < fillwordMatrix[i].length; j++) {
+                str += fillwordMatrix[i][j];
             }
         }
         return str;
@@ -2000,6 +2012,39 @@
             str += DisplayWords[i] + '0';
         }
         return str;
+    }
+
+    function DisplayWordsToStringLong() {
+        let wordsResult = $('#search-result').find('div.word-res');
+
+        let str = '';
+        for (let i = 0; i < wordsResult.length; i++) {
+            let children = wordsResult[i].childNodes;
+
+            for (let j = 0; j < children.length; j++) {
+                let LN = children[j].childNodes
+                let classes = LN[0].classList;
+
+                if (ContainsSelectedClass(classes)) {
+                    str += LN[0].textContent + '1';
+                }
+                else {
+                    str += LN[0].textContent + '2';
+                }
+            }
+
+            str += '0';
+        }
+        return str;
+    }
+
+    function ContainsSelectedClass(classes) {
+        for (let i = 0; i < classes.length; i++) {
+            if (classes[i] === 'letter-selected') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*WORD END-------------------------------------------------------------------------------------------*/
