@@ -16,14 +16,14 @@ namespace WordForWord.Models.Repository
         }
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public IEnumerable<AllWords> GetWords(string keyWord)
         {
 
             List<AllWords> words = db.AllWords
-                .FromSqlRaw("select * from [dbo].[FindWords]({0})", "картина")
+                .FromSqlRaw("select * from [dbo].[FindWords]({0})", keyWord)
                 .OrderBy(x => x.WordCount)
                 .ToList();
 

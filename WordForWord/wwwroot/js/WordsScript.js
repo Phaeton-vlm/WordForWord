@@ -32,6 +32,7 @@
     const errorBoxes = [
         $('#search-error-box'),
         $('#chess-error-box'),
+        $('#crossword-error-box'),
     ]
     //Поиск слов по ключевому слову
     $('#get-words-form').submit(function () {
@@ -237,7 +238,6 @@
         added = 4 + notAddedWords;
         temp = AddFirstWords(4, added);
         if (temp == added) {
-            //Error(id,Невозможно собрать судоку)
             return false;
         }
 
@@ -250,7 +250,6 @@
 
 
         if (MAX_WORDS_SYMBOLS_FOR_KEY_WORD <= 4) {
-            //Error(id,Невозможно собрать кроссворд)
             return false;
         }
 
@@ -261,7 +260,6 @@
             let lTemp = AddFirstWords(i, added)
 
             if (lTemp == added && ((i + 1) == (MAX_WORDS_SYMBOLS_FOR_KEY_WORD + 1)) && !at) {
-                //Error(id,Невозможно собрать кроссворд)
                 return false;
             }
 
@@ -861,6 +859,7 @@
 
     //Создание кроссворда
     function CreateCrossword(secretWord) {
+        errorBoxes[2].css('display', 'none');
         crosswordMatrix = []
         tableCurrentPosition = 0;
         selectedCrossword.text(secretWord);
@@ -876,7 +875,8 @@
             let completed = AddRowToCrossword(secretWord[i], RightWordsForCrossword)
 
             if (!completed) {
-                console.log("Не удалось создать кроссворд")
+                crosswordMatrix = [];
+                SetError(errorBoxes[2], 'Нет подходящих слов для сборки кроссворда, выберите другое слово.');
                 return false;
             }
 
@@ -1075,6 +1075,7 @@
     let chessWord = '';
     //Создание шахмат
     function CreateChess(word, figure) {
+        errorBoxes[1].css('display', 'none');
         chessWord = word;
 
         if (CURRENT_FIGURE != figure) {
@@ -1271,7 +1272,7 @@
                 }
 
                 if (shift === -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1299,7 +1300,7 @@
                 }
 
                 if (shift === -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1327,7 +1328,7 @@
                 }
 
                 if (shift === -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1355,7 +1356,7 @@
                 }
 
                 if (shift === -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1663,7 +1664,7 @@
                 }
 
                 if (shift == -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1688,7 +1689,7 @@
                 }
 
                 if (shift == -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1713,7 +1714,7 @@
                 }
 
                 if (shift == -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1738,7 +1739,7 @@
                 }
 
                 if (shift == -1) {
-                    console.log('Не удалось')
+                    SetError(errorBoxes[1], 'Не удалось создать шахматы, повторите попытку или выберите другое слово.');
                     return false;
                 }
 
@@ -1989,6 +1990,10 @@
     }
 
     function CrosswordMatrixToString() {
+        if (crosswordMatrix.length === 0) {
+            return 'none';
+        }
+        
         let str = '';
         for (let i = 0; i < crosswordMatrix.length; i++) {
             str += crosswordMatrix[i];

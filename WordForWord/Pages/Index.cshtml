@@ -13,12 +13,12 @@
                     <div class="col-md-4 col-sm-12 d-flex justify-content-center align-items-center">
                         <span class="header-text">Слово в слове</span>
                     </div>
-                    <div class="col-md-8 col-sm-12 d-flex justify-content-end" style="height:inherit">
-                        <div class="header-menu">
+                    <div class="col-md-8 col-sm-12 d-flex justify-content-md-end justify-content-sm-center align-items-center" style="height:inherit">
+                        @*<div class="header-menu">
                             <div class="header-menu-item">
                                 <span>Справка</span>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
 
 
                             <div id="search-error-box" class="keyword-error">
-                                <div id="keyword-error-descr">фы ывпыфвп ывпыsa sdfasg sag asdg ag sd g sag sa dg sad gagasdgasdg  впвы пвыф пвы пвыфп вы </div>
+                                <div id="keyword-error-descr"></div>
                             </div>
                         </div>
 
@@ -80,7 +80,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <button id="change-display-words" class="common-button">Подобрать слова</button>
+                        @*<button id="change-display-words" class="common-button">Подобрать слова</button>*@
 
                     </div>
                 </div>
@@ -271,6 +271,12 @@
                             </div>
 
                         </div>
+
+                        <div class="row">
+                            <div id="crossword-error-box" class="keyword-error">
+                                <div id="keyword-error-descr">Не удалось создать шахматы, повторите попытку или выберите другое слово</div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -353,7 +359,7 @@
 
                         <div class="row">
                             <div id="chess-error-box" class="keyword-error">
-                                <div id="keyword-error-descr">Не удалось создать шахматы, повторите попытку или выбирете другое слово</div>
+                                <div id="keyword-error-descr">Не удалось создать шахматы, повторите попытку или выберите другое слово</div>
                             </div>
                         </div>
 
@@ -368,12 +374,23 @@
 
         </section>
 
-        <form id="create-docx-form" name="create-docx-form" method="get">
+        <section id="export-section" class="invisibl-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <form id="create-docx-form" name="create-docx-form" method="get">
 
-            <button class="submit-button" id="submit-docx" type="submit">Экспорт</button>
+                            <button class="submit-button" id="submit-docx" type="submit">Экспорт</button>
 
 
-        </form>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </section>
+        
 
     </div>
 
