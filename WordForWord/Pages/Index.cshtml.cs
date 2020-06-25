@@ -60,6 +60,7 @@ namespace WordForWord.Pages
                 }
             }
 
+            
             MemoryStream memoryStream = new MemoryStream();
 
             
@@ -110,161 +111,166 @@ namespace WordForWord.Pages
             graphics.FillRectangle(PaintingSet.GrayBrush, 2100, 50, 200, 50);
             graphics.DrawString("Учителю", PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 2130, 60);
 
-
-            int currentRow = 0;
-            int currentCell = 0;
-            int remainingСells = 0;
-
-            //Вывод слов: START
-            for (int i = 0; i < wordsArray.Count; i++)
+            try
             {
-                remainingСells += (wordsArray[i].Length + 1);
-                if(remainingСells > MAX_ROW_COUNT)
-                {
-                    remainingСells = wordsArray[i].Length + 1;
-                    currentRow++;
-                    currentCell = 0;
-                }
 
-                for (int j = 0; j < wordsArray[i].Length; j++)
+
+                int currentRow = 0;
+                int currentCell = 0;
+                int remainingСells = 0;
+
+                //Вывод слов: START
+                for (int i = 0; i < wordsArray.Count; i++)
                 {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * currentCell), 500 + (150 * currentRow), 130, 130);
-                    graphics.DrawString(wordsArray[i][j].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 10, 500 + (150 * currentRow));
-                    graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * currentCell) + 1, 500 + (150 * currentRow), 128, 30);
-                    graphics.DrawString((lettersArray.FindIndex(0, x => x == wordsArray[i][j]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
+                    remainingСells += (wordsArray[i].Length + 1);
+                    if (remainingСells > MAX_ROW_COUNT)
+                    {
+                        remainingСells = wordsArray[i].Length + 1;
+                        currentRow++;
+                        currentCell = 0;
+                    }
+
+                    for (int j = 0; j < wordsArray[i].Length; j++)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * currentCell), 500 + (150 * currentRow), 130, 130);
+                        graphics.DrawString(wordsArray[i][j].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 10, 500 + (150 * currentRow));
+                        graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * currentCell) + 1, 500 + (150 * currentRow), 128, 30);
+                        graphics.DrawString((lettersArray.FindIndex(0, x => x == wordsArray[i][j]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
+                        currentCell++;
+                    }
+
                     currentCell++;
                 }
+                //Вывод слов: END
 
-                currentCell++;
-            }
-            //Вывод слов: END
+                int currentPosition = 215;
+                int letterlength = 0;
+                const int spacing = 10;
 
-            int currentPosition = 215;
-            int letterlength = 0;
-            const int spacing = 10;
-            
-            //Вывод ключевого слова: START
-            for (int i = 0; i < keyword.Length; i++)
-            {
-                graphics.DrawString(keyword[i].ToString(), PaintingSet.KeyWordFont, PaintingSet.BlackBrush, currentPosition, 180);
-                letterlength = (int)graphics.MeasureString(keyword[i].ToString(), PaintingSet.KeyWordFont).Width;
-
-                graphics.DrawString((lettersArray.FindIndex(0, x => x == keyword[i]) + 1).ToString(), PaintingSet.KeyWordNumberFont, PaintingSet.BlackBrush, currentPosition + (letterlength/3), 330);
-                currentPosition += letterlength + spacing;
-            }
-
-            graphics.DrawRectangle(PaintingSet.GrayPen, 125, 140, (80 + currentPosition - spacing - letterlength), 180);
-            graphics.DrawRectangle(PaintingSet.GrayPen, 125, 320, (80 + currentPosition - spacing - letterlength), 80);
-            //Вывод ключевого слова: END
-
-            //Вывод филворда: START
-            graphics.DrawString("Филворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 1450);
-            for (int i = 0, z = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 7; j++)
+                //Вывод ключевого слова: START
+                for (int i = 0; i < keyword.Length; i++)
                 {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 1550 + (130 * i), 130, 130);
-                    if(fillwordString[z].ToString() != 0.ToString())
-                    {
-                        graphics.DrawString(fillwordString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 1550 + (130 * i));
-                    }                  
-                    z++;
+                    graphics.DrawString(keyword[i].ToString(), PaintingSet.KeyWordFont, PaintingSet.BlackBrush, currentPosition, 180);
+                    letterlength = (int)graphics.MeasureString(keyword[i].ToString(), PaintingSet.KeyWordFont).Width;
+
+                    graphics.DrawString((lettersArray.FindIndex(0, x => x == keyword[i]) + 1).ToString(), PaintingSet.KeyWordNumberFont, PaintingSet.BlackBrush, currentPosition + (letterlength / 3), 330);
+                    currentPosition += letterlength + spacing;
                 }
-            }
-            //Вывод филворда: END
 
-            //Вывод судоку: START
-            graphics.DrawString("Судоку", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 1450);
-            for (int i = 0, z = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 1500 + (130 * j), 1550 + (130 * i), 130, 130);
-                    graphics.DrawString(sudokuString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1500 + (130 * j) + 10, 1550 + (130 * i));
-                    z++;
-                }
-            }
-            //Вывод судоку: END
+                graphics.DrawRectangle(PaintingSet.GrayPen, 125, 140, (80 + currentPosition - spacing - letterlength), 180);
+                graphics.DrawRectangle(PaintingSet.GrayPen, 125, 320, (80 + currentPosition - spacing - letterlength), 80);
+                //Вывод ключевого слова: END
 
-            //Вывод кроссворда: START
-
-            if(crosswordString != "none")
-            {
-                int counterForCrossword = 0;
-                int secretWordLenght = 0;
-                graphics.DrawString("Кроссворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 2325);
-                for (int i = 0, z = 0; i < 8; i++)
+                //Вывод филворда: START
+                graphics.DrawString("Филворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 1450);
+                for (int i = 0, z = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 7; j++)
                     {
-                        counterForCrossword++;
-                        if (crosswordString[z].ToString() != 0.ToString())
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 1550 + (130 * i), 130, 130);
+                        if (fillwordString[z].ToString() != 0.ToString())
                         {
-                            graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 2425 + (130 * i), 130, 130);
-                            graphics.DrawString(crosswordString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 2425 + (130 * i));
-
-                            if (counterForCrossword != 4)
-                            {
-                                graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * j) + 1, 2425 + (130 * i), 128, 30);
-                                graphics.DrawString((lettersArray.FindIndex(0, x => x == crosswordString[z]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * j) + 100, 2425 + (130 * i));
-
-                            }
-
-                            if (counterForCrossword == 4)
-                            {
-                                secretWordLenght++;
-                            }
+                            graphics.DrawString(fillwordString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 1550 + (130 * i));
                         }
                         z++;
                     }
-                    counterForCrossword = 0;
                 }
+                //Вывод филворда: END
 
-                for (int i = 0; i < secretWordLenght; i++)
+                //Вывод судоку: START
+                graphics.DrawString("Судоку", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 1450);
+                for (int i = 0, z = 0; i < 4; i++)
                 {
-                    graphics.DrawRectangle(PaintingSet.BlackPenBold, 125 + (130 * 3), 2425 + (130 * i), 130, 130);
-                }
-            }
-            
-            //Вывод кроссворда: END
-
-            //Вывод шахмат: START
-            graphics.DrawString("Шахматы", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 2325);
-            for (int i = 0, z = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * j), 2425 + (110 * i), 110, 110);
-
-                    if (chessString[z].ToString() != 0.ToString())
+                    for (int j = 0; j < 4; j++)
                     {
-                        if(chessString[z].ToString() == "R")
-                        {
-                            graphics.DrawImage(new Bitmap("Icons/rook.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6,95,95);
-                            z++;
-                            continue;
-                        }
-
-                        if (chessString[z].ToString() == "B")
-                        {
-                            graphics.DrawImage(new Bitmap("Icons/bishop.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
-                            z++;
-                            continue;
-                        }
-
-                        graphics.DrawString(chessString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1340 + (110 * j) + 10, 2425 + (110 * i));
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 1500 + (130 * j), 1550 + (130 * i), 130, 130);
+                        graphics.DrawString(sudokuString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1500 + (130 * j) + 10, 1550 + (130 * i));
+                        z++;
                     }
-                    z++;
                 }
-            }
+                //Вывод судоку: END
 
-            for (int i = 0; i < chessWord.Length; i++)
-            {
-                graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * i), 3340, 110, 110);
-                graphics.DrawString(chessWord[i].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1340 + (110 * i) + 10, 3340);
+                //Вывод кроссворда: START
 
+                if (crosswordString != "none")
+                {
+                    int counterForCrossword = 0;
+                    int secretWordLenght = 0;
+                    graphics.DrawString("Кроссворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 2325);
+                    for (int i = 0, z = 0; i < 8; i++)
+                    {
+                        for (int j = 0; j < 7; j++)
+                        {
+                            counterForCrossword++;
+                            if (crosswordString[z].ToString() != 0.ToString())
+                            {
+                                graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 2425 + (130 * i), 130, 130);
+                                graphics.DrawString(crosswordString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 2425 + (130 * i));
+
+                                if (counterForCrossword != 4)
+                                {
+                                    graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * j) + 1, 2425 + (130 * i), 128, 30);
+                                    graphics.DrawString((lettersArray.FindIndex(0, x => x == crosswordString[z]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * j) + 100, 2425 + (130 * i));
+
+                                }
+
+                                if (counterForCrossword == 4)
+                                {
+                                    secretWordLenght++;
+                                }
+                            }
+                            z++;
+                        }
+                        counterForCrossword = 0;
+                    }
+
+                    for (int i = 0; i < secretWordLenght; i++)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPenBold, 125 + (130 * 3), 2425 + (130 * i), 130, 130);
+                    }
+                }
+
+                //Вывод кроссворда: END
+
+                //Вывод шахмат: START
+                graphics.DrawString("Шахматы", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 2325);
+                for (int i = 0, z = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * j), 2425 + (110 * i), 110, 110);
+
+                        if (chessString[z].ToString() != 0.ToString())
+                        {
+                            if (chessString[z].ToString() == "R")
+                            {
+                                graphics.DrawImage(new Bitmap("wwwroot/Icons/rook.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
+                                z++;
+                                continue;
+                            }
+
+                            if (chessString[z].ToString() == "B")
+                            {
+                                graphics.DrawImage(new Bitmap("wwwroot/Icons/bishop.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
+                                z++;
+                                continue;
+                            }
+
+                            graphics.DrawString(chessString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1340 + (110 * j) + 10, 2425 + (110 * i));
+                        }
+                        z++;
+                    }
+                }
+
+                for (int i = 0; i < chessWord.Length; i++)
+                {
+                    graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * i), 3340, 110, 110);
+                    graphics.DrawString(chessWord[i].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1340 + (110 * i) + 10, 3340);
+
+                }
+                //Вывод шахмат: END
             }
-            //Вывод шахмат: END
+            catch { }
 
 
 
@@ -280,173 +286,179 @@ namespace WordForWord.Pages
             graphics.FillRectangle(PaintingSet.GrayBrush, 2100, 50, 200, 50);
             graphics.DrawString("Ученику", PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 2130, 60);
 
-            int currentPosition = 215;
-            int letterlength = 0;
-            const int spacing = 10;
-
-            //Вывод ключевого слова: START
-            for (int i = 0; i < keyword.Length; i++)
+            try
             {
-                graphics.DrawString(keyword[i].ToString(), PaintingSet.KeyWordFont, PaintingSet.BlackBrush, currentPosition, 180);
-                letterlength = (int)graphics.MeasureString(keyword[i].ToString(), PaintingSet.KeyWordFont).Width;
 
-                graphics.DrawString((lettersArray.FindIndex(0, x => x == keyword[i]) + 1).ToString(), PaintingSet.KeyWordNumberFont, PaintingSet.BlackBrush, currentPosition + (letterlength / 3), 330);
-                currentPosition += letterlength + spacing;
-            }
 
-            graphics.DrawRectangle(PaintingSet.GrayPen, 125, 140, (80 + currentPosition - spacing - letterlength), 180);
-            graphics.DrawRectangle(PaintingSet.GrayPen, 125, 320, (80 + currentPosition - spacing - letterlength), 80);
-            //Вывод ключевого слова: END
+                int currentPosition = 215;
+                int letterlength = 0;
+                const int spacing = 10;
 
-            int currentRow = 0;
-            int currentCell = 0;
-            int remainingСells = 0;
-
-            //Вывод слов: START
-            for (int i = 0; i < wordsArrayForStudent.Count; i++)
-            {
-                remainingСells += (wordsArrayForStudent[i].Length / 2) + 1;
-                if (remainingСells > MAX_ROW_COUNT)
+                //Вывод ключевого слова: START
+                for (int i = 0; i < keyword.Length; i++)
                 {
-                    remainingСells = (wordsArrayForStudent[i].Length / 2) + 1;
-                    currentRow++;
-                    currentCell = 0;
+                    graphics.DrawString(keyword[i].ToString(), PaintingSet.KeyWordFont, PaintingSet.BlackBrush, currentPosition, 180);
+                    letterlength = (int)graphics.MeasureString(keyword[i].ToString(), PaintingSet.KeyWordFont).Width;
+
+                    graphics.DrawString((lettersArray.FindIndex(0, x => x == keyword[i]) + 1).ToString(), PaintingSet.KeyWordNumberFont, PaintingSet.BlackBrush, currentPosition + (letterlength / 3), 330);
+                    currentPosition += letterlength + spacing;
                 }
 
+                graphics.DrawRectangle(PaintingSet.GrayPen, 125, 140, (80 + currentPosition - spacing - letterlength), 180);
+                graphics.DrawRectangle(PaintingSet.GrayPen, 125, 320, (80 + currentPosition - spacing - letterlength), 80);
+                //Вывод ключевого слова: END
 
-                for (int j = 0; j < wordsArrayForStudent[i].Length - 1; j+=2)
+                int currentRow = 0;
+                int currentCell = 0;
+                int remainingСells = 0;
+
+                //Вывод слов: START
+                for (int i = 0; i < wordsArrayForStudent.Count; i++)
                 {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * currentCell), 500 + (150 * currentRow), 130, 130);
-                    graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * currentCell) + 1, 500 + (150 * currentRow), 128, 30);
-
-                    if (wordsArrayForStudent[i][j + 1].ToString() == 1.ToString())
+                    remainingСells += (wordsArrayForStudent[i].Length / 2) + 1;
+                    if (remainingСells > MAX_ROW_COUNT)
                     {
-                        graphics.DrawString("?", PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
-
+                        remainingСells = (wordsArrayForStudent[i].Length / 2) + 1;
+                        currentRow++;
+                        currentCell = 0;
                     }
-                    else
-                    {
-                        graphics.DrawString((lettersArray.FindIndex(0, x => x == wordsArrayForStudent[i][j]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
 
+
+                    for (int j = 0; j < wordsArrayForStudent[i].Length - 1; j += 2)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * currentCell), 500 + (150 * currentRow), 130, 130);
+                        graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * currentCell) + 1, 500 + (150 * currentRow), 128, 30);
+
+                        if (wordsArrayForStudent[i][j + 1].ToString() == 1.ToString())
+                        {
+                            graphics.DrawString("?", PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
+
+                        }
+                        else
+                        {
+                            graphics.DrawString((lettersArray.FindIndex(0, x => x == wordsArrayForStudent[i][j]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * currentCell) + 100, 500 + (150 * currentRow));
+
+                        }
+
+                        currentCell++;
                     }
 
                     currentCell++;
                 }
+                //Вывод слов: END
 
-                currentCell++;
-            }
-            //Вывод слов: END
-
-            //Вывод филворда: START
-            graphics.DrawString("Филворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 1450);
-            for (int i = 0, z = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 1550 + (130 * i), 130, 130);
-                    graphics.DrawString(fillwordFullString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 1550 + (130 * i));                
-                    z++;
-                }
-            }
-            //Вывод филворда: END
-
-            //Вывод судоку: START
-            graphics.DrawString("Судоку", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 1450);
-            for (int i = 0, z = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 1500 + (130 * j), 1550 + (130 * i), 130, 130);
-
-                    if (i == j)
-                    {        
-                        graphics.DrawString((lettersArray.FindIndex(0, x => x == sudokuString[z]) + 1).ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1500 + (130 * j) + 10, 1550 + (130 * i));                    
-                    }
-
-                    if(i == 3 && j == 0)
-                    {
-                        graphics.DrawString((lettersArray.FindIndex(0, x => x == sudokuString[z]) + 1).ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1500 + (130 * j) + 10, 1550 + (130 * i));
-                    }
-
-                    z++;
-
-                }
-            }
-            //Вывод судоку: END
-
-            //Вывод кроссворда: START
-            if(crosswordString != "none")
-            {
-                int counterForCrossword = 0;
-                int secretWordLenght = 0;
-                graphics.DrawString("Кроссворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 2325);
-                for (int i = 0, z = 0; i < 8; i++)
+                //Вывод филворда: START
+                graphics.DrawString("Филворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 1450);
+                for (int i = 0, z = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 7; j++)
                     {
-                        counterForCrossword++;
-                        if (crosswordString[z].ToString() != 0.ToString())
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 1550 + (130 * i), 130, 130);
+                        graphics.DrawString(fillwordFullString[z].ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 125 + (130 * j) + 10, 1550 + (130 * i));
+                        z++;
+                    }
+                }
+                //Вывод филворда: END
+
+                //Вывод судоку: START
+                graphics.DrawString("Судоку", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 1450);
+                for (int i = 0, z = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 1500 + (130 * j), 1550 + (130 * i), 130, 130);
+
+                        if (i == j)
                         {
-                            graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 2425 + (130 * i), 130, 130);
-                            if (counterForCrossword != 4)
-                            {
-                                graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * j) + 1, 2425 + (130 * i), 128, 30);
-                                graphics.DrawString((lettersArray.FindIndex(0, x => x == crosswordString[z]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * j) + 100, 2425 + (130 * i));
+                            graphics.DrawString((lettersArray.FindIndex(0, x => x == sudokuString[z]) + 1).ToString(), PaintingSet.LightTextFont, PaintingSet.GrayBrush, 1500 + (130 * j) + 10, 1550 + (130 * i));
+                        }
 
+                        if (i == 3 && j == 0)
+                        {
+                            graphics.DrawString((lettersArray.FindIndex(0, x => x == sudokuString[z]) + 1).ToString(), PaintingSet.LightTextFont, PaintingSet.GrayBrush, 1500 + (130 * j) + 10, 1550 + (130 * i));
+                        }
+
+                        z++;
+
+                    }
+                }
+                //Вывод судоку: END
+
+                //Вывод кроссворда: START
+                if (crosswordString != "none")
+                {
+                    int counterForCrossword = 0;
+                    int secretWordLenght = 0;
+                    graphics.DrawString("Кроссворд", PaintingSet.TextFont, PaintingSet.BlackBrush, 300, 2325);
+                    for (int i = 0, z = 0; i < 8; i++)
+                    {
+                        for (int j = 0; j < 7; j++)
+                        {
+                            counterForCrossword++;
+                            if (crosswordString[z].ToString() != 0.ToString())
+                            {
+                                graphics.DrawRectangle(PaintingSet.BlackPen, 125 + (130 * j), 2425 + (130 * i), 130, 130);
+                                if (counterForCrossword != 4)
+                                {
+                                    graphics.FillRectangle(PaintingSet.GrayBrush, 125 + (130 * j) + 1, 2425 + (130 * i), 128, 30);
+                                    graphics.DrawString((lettersArray.FindIndex(0, x => x == crosswordString[z]) + 1).ToString(), PaintingSet.LightTextFontSmall, PaintingSet.BlackBrush, 125 + (130 * j) + 100, 2425 + (130 * i));
+
+                                }
+
+                                if (counterForCrossword == 4)
+                                {
+                                    secretWordLenght++;
+                                }
+                            }
+                            z++;
+                        }
+                        counterForCrossword = 0;
+                    }
+
+                    for (int i = 0; i < secretWordLenght; i++)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPenBold, 125 + (130 * 3), 2425 + (130 * i), 130, 130);
+                    }
+                }
+                //Вывод кроссворда: END
+
+                //Вывод шахмат: START
+                graphics.DrawString("Шахматы", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 2325);
+                for (int i = 0, z = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * j), 2425 + (110 * i), 110, 110);
+
+                        if (chessString[z].ToString() != 0.ToString())
+                        {
+                            if (chessString[z].ToString() == "R")
+                            {
+                                graphics.DrawImage(new Bitmap("wwwroot/Icons/rook.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
+                                z++;
+                                continue;
                             }
 
-                            if (counterForCrossword == 4)
+                            if (chessString[z].ToString() == "B")
                             {
-                                secretWordLenght++;
+                                graphics.DrawImage(new Bitmap("wwwroot/Icons/bishop.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
+                                z++;
+                                continue;
                             }
+
+                            graphics.DrawString((lettersArray.FindIndex(0, x => x == chessString[z]) + 1).ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1340 + (110 * j) + 10, 2425 + (110 * i));
                         }
                         z++;
                     }
-                    counterForCrossword = 0;
                 }
 
-                for (int i = 0; i < secretWordLenght; i++)
+                for (int i = 0; i < chessWord.Length; i++)
                 {
-                    graphics.DrawRectangle(PaintingSet.BlackPenBold, 125 + (130 * 3), 2425 + (130 * i), 130, 130);
+                    graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * i), 3340, 110, 110);
                 }
-            }        
-            //Вывод кроссворда: END
-
-            //Вывод шахмат: START
-            graphics.DrawString("Шахматы", PaintingSet.TextFont, PaintingSet.BlackBrush, 1620, 2325);
-            for (int i = 0, z = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * j), 2425 + (110 * i), 110, 110);
-
-                    if (chessString[z].ToString() != 0.ToString())
-                    {
-                        if (chessString[z].ToString() == "R")
-                        {
-                            graphics.DrawImage(new Bitmap("Icons/rook.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
-                            z++;
-                            continue;
-                        }
-
-                        if (chessString[z].ToString() == "B")
-                        {
-                            graphics.DrawImage(new Bitmap("Icons/bishop.png"), 1340 + (110 * j) + 10, 2425 + (110 * i) + 6, 95, 95);
-                            z++;
-                            continue;
-                        }
-                        
-                        graphics.DrawString((lettersArray.FindIndex(0, x => x == chessString[z]) + 1).ToString(), PaintingSet.LightTextFont, PaintingSet.BlackBrush, 1340 + (110 * j) + 10, 2425 + (110 * i));
-                    }
-                    z++;
-                }
+                //Вывод шахмат: END
             }
-
-            for (int i = 0; i < chessWord.Length; i++)
-            {
-                graphics.DrawRectangle(PaintingSet.BlackPen, 1340 + (110 * i), 3340, 110, 110);
-            }
-            //Вывод шахмат: END
+            catch { }
 
             return image;
         }

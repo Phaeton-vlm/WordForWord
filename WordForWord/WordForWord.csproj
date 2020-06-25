@@ -4,10 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Icons\bishop.png" />
-    <Content Include="Icons\rook.png" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DocXCore" Version="1.0.7" />
@@ -24,8 +23,13 @@
   <ItemGroup>
     <Folder Include="ViewComponents\" />
     <Folder Include="wwwroot\img\" />
-    <Folder Include="Files\" />
-    <Folder Include="Icons\" />
+    <Folder Include="wwwroot\Icons\" />
+    <Folder Include="wwwroot\fonts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Icons\bishop.png" />
+    <None Include="wwwroot\Icons\rook.png" />
   </ItemGroup>
 
 

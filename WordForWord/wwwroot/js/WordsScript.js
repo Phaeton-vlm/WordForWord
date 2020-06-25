@@ -52,8 +52,6 @@
 
         StartLoading();
 
-        
-
         $.ajax({
             type: 'GET',
             url: window.location.pathname,
@@ -63,7 +61,6 @@
                 keyWord: Keyword
             },
             success: function (data) {
-
                 AfterGettingResults(data)
             }
         })
@@ -116,18 +113,11 @@
             return false;
         }
 
-        if (Keyword.length > MAX_KEYWORD_LENGTH) {
-            $('#input-Keyword-error').text("Максимум 15 букв")
-            return false;
-        }
-
         let expr = /^[а-яa-z]+$/i
 
         if (!expr.test(Keyword)) {
 
             EditKeyValue();
-            $('#get-keyword').val(Keyword)
-
             return CheckMinKeyWordLength();
         }
 
@@ -232,7 +222,7 @@
         let notAddedWords = 0;
         let temp = 0;
 
-        let added = 5
+        let added = 5;
         notAddedWords += AddFirstWords(3, added);
 
         added = 4 + notAddedWords;
@@ -463,9 +453,6 @@
         FillEmptyValue();
         BringOutToView();
         DisplaySelectedWords();
-
-        console.log('copy');
-        console.log(fillwordMatrixCopy);
     }
 
     //Вставка горизонтальных слов
@@ -877,6 +864,8 @@
             if (!completed) {
                 crosswordMatrix = [];
                 SetError(errorBoxes[2], 'Нет подходящих слов для сборки кроссворда, выберите другое слово.');
+                tableCurrentPosition = 0;
+                HideRemainingCells(0);
                 return false;
             }
 
@@ -1015,8 +1004,6 @@
 
     //Создание списка допустимых слов для шахмат
     function CreateListWordsForChess() {
-        console.log('CreateListWordsForChess');
-
         ResetChessMatrix()
 
         WordsForChess = DisplayWords.filter(function (item) {
@@ -2186,16 +2173,5 @@
     });
 
     /*DISPLAY WORDS*/
-
-    //Выбор слова для кросворда
-    //$('#crossword-values').on('click', 'li', function () {
-    //    CreateCrossword($(this).text())
-    //});
-
-    //Выбор слова для шахмат
-    /*$('#chess-values').on('click', 'li', function () {
-        CreateChess($(this).text())
-    });*/
-
 
 });

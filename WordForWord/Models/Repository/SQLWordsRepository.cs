@@ -21,7 +21,6 @@ namespace WordForWord.Models.Repository
 
         public IEnumerable<AllWords> GetWords(string keyWord)
         {
-
             List<AllWords> words = db.AllWords
                 .FromSqlRaw("select * from [dbo].[FindWords]({0})", keyWord)
                 .OrderBy(x => x.WordCount)
